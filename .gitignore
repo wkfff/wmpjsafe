@@ -27,8 +27,7 @@ $RECYCLE.BIN/
 *.exe
 *.dof
 *.cfg
-Test.dll
-wmpj.dsk
+Testdll.dll
 
 # =========================
 # Operating System Files
