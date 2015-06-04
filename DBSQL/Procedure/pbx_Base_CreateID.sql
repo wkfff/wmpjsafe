@@ -1,5 +1,5 @@
-IF OBJECT_ID('dbo.pbx_BasicCreateID') IS NOT NULL 
-    DROP PROCEDURE dbo.pbx_BasicCreateID
+IF OBJECT_ID('dbo.pbx_Base_CreateID') IS NOT NULL 
+    DROP PROCEDURE dbo.pbx_Base_CreateID
 go
 
 --  ********************************************************************************************
@@ -18,7 +18,7 @@ go
 --  ||=========================================================================================                                         
 --  ********************************************************************************************
 
-CREATE         PROCEDURE pbx_BasicCreateID
+CREATE         PROCEDURE pbx_Base_CreateID
     (
       @parid VARCHAR(50) ,			--¸¸id
       @dbname VARCHAR(30) ,			--±íÃû

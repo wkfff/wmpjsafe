@@ -1,5 +1,5 @@
-if object_id ('dbo.pbx_Base_GetOneInfo') is not null
-    drop procedure dbo.pbx_Base_GetOneInfo
+IF OBJECT_ID('dbo.pbx_Base_GetOneInfo') IS NOT NULL 
+    DROP PROCEDURE dbo.pbx_Base_GetOneInfo
 go
 --  ********************************************************************************************
 --  ||                                                                                        
@@ -16,25 +16,33 @@ go
 --  ||              alter         mx         2015.03.26   first alter                                     
 --  ********************************************************************************************
 
-CREATE     procedure pbx_Base_GetOneInfo(
-	@cmode 		varchar(5),
-	@sztypeid 	varchar(50)
-)
-as
-
-declare @rowcount_var int
+CREATE     PROCEDURE pbx_Base_GetOneInfo
+    (
+      @cmode VARCHAR(5) ,
+      @sztypeid VARCHAR(50)
+    )
+AS 
+    DECLARE @rowcount_var INT
 --加载包
-if @cmode = 'I' 
-begin
-	select a.*
-	from tbx_PackageInfo a 
-	where a.ITypeId= @sztypeid 
-	select @rowcount_var = @@rowcount
-end
+    IF @cmode = 'I' 
+        BEGIN
+            SELECT  a.*
+            FROM    tbx_PackageInfo a
+            WHERE   a.ITypeId = @sztypeid 
+            SELECT  @rowcount_var = @@rowcount
+        END
+    ELSE 
+        IF @cmode = 'P' 
+            BEGIN
+                SELECT  a.*
+                FROM    dbo.tbx_Ptype a
+                WHERE   a.PTypeId = @sztypeid 
+                SELECT  @rowcount_var = @@rowcount
+            END
 
-if @rowcount_var = 1 
-	return 0
-else 
-	return -1105             -- 该记录已被删除或数据不完整，请检查！
+    IF @rowcount_var = 1 
+        RETURN 0
+    ELSE 
+        RETURN -1105             -- 该记录已被删除或数据不完整，请检查！
 
 go

@@ -2,8 +2,7 @@ IF OBJECT_ID('dbo.pbx_Base_InsertP') IS NOT NULL
     DROP PROCEDURE dbo.pbx_Base_InsertP
 go
 
---  ********************************************************************************************
---  ||                                                                                        
+--  ********************************************************************************************                                                                                  
 --  ||   过程名称：pbx_Base_InsertP                                                 
 --  ||   过程功能：添加基本信息--商品
 --  ********************************************************************************************
@@ -14,7 +13,7 @@ CREATE      PROCEDURE pbx_Base_InsertP
       @FullName VARCHAR(66) ,
       @UserCode VARCHAR(50) ,
       @Name VARCHAR(30) ,
-      @PYM VARCHAR(60) ,
+      @PNamepy VARCHAR(60) ,
       @Model VARCHAR(60) ,
       @Standard VARCHAR(120) ,
       @Area VARCHAR(30) ,
@@ -22,8 +21,8 @@ CREATE      PROCEDURE pbx_Base_InsertP
       @UsefulLifeday INT ,
       @Comment VARCHAR(250),
       @IsStop INT ,
-      @RltTypeID VARCHAR(25) OUTPUT ,
-      @errorValue VARCHAR(50) OUTPUT ,
+      @RltTypeID VARCHAR(25) OUTPUT , --基本信息都需要定义这个参数
+      @errorValue VARCHAR(50) OUTPUT ,--基本信息都需要定义这个参数
       @uErueMode INT = 0 --数据插入标识 0 为程序插入  1为excel导入
     )
 AS 
@@ -44,7 +43,7 @@ AS
 
     SELECT  @dbname = 'tbx_Ptype'
 
-    EXEC @nReturntype = pbx_BasicCreateID @ParId, @dbname, @typeid_1 OUT, @nSonnum OUT, @nSoncount OUT, @ParRec OUT
+    EXEC @nReturntype = pbx_Base_CreateID @ParId, @dbname, @typeid_1 OUT, @nSonnum OUT, @nSoncount OUT, @ParRec OUT
 
     IF @nReturntype = -101 
         BEGIN
@@ -107,8 +106,10 @@ AS
     --EXEC dbo.P_hh_XW_BaseUpdateTag @BaseType = @dbname, UpdateTag = @UpdateTag OUTPUT
     SELECT @UpdateTag = 0
 
-	INSERT dbo.tbx_Ptype( PTypeId ,Parid ,PSonnum ,Soncount ,Leveal ,PUsercode ,PFullname ,PComment ,[Standard] ,[Model] ,Area ,Costmode ,IsStop ,Parrec ,RowIndex ,Deleted ,Updatetag)
-	VALUES  ( @typeid_1 ,@ParId ,0 ,0 ,@leveal ,@UserCode ,@FullName ,@Comment ,@Standard ,@Model ,@Area ,@CostMode ,@Isstop ,@Parrec ,@RowIndex ,0 ,@UpdateTag)
+	INSERT dbo.tbx_Ptype( PTypeId ,Parid ,PSonnum ,Soncount ,Leveal ,PUsercode ,PFullname ,PComment ,pnamepy,
+			[Name], UsefulLifeday, [Standard] ,[Model] ,Area ,Costmode ,IsStop ,Parrec ,RowIndex ,Deleted ,Updatetag)
+	VALUES  ( @typeid_1 ,@ParId ,0 ,0 ,@leveal ,@UserCode ,@FullName ,@Comment , @PNamepy,
+			@Name, @UsefulLifeday, @Standard ,@Model ,@Area ,@CostMode ,@Isstop ,@Parrec ,@RowIndex ,0 ,@UpdateTag)
    
     SET @RltTypeID = @typeId_1
     IF @@ROWCOUNT = 0 

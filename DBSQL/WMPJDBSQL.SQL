@@ -76,11 +76,13 @@ BEGIN
 		[PUsercode] VARCHAR(20) NOT NULL DEFAULT '' ,
 		[PFullname] VARCHAR(20) NOT NULL DEFAULT '' ,
 		[PComment] VARCHAR(255) NOT NULL DEFAULT '' ,
-
+		
+		[Name] [varchar] (66) NOT NULL DEFAULT (''),		--简称
 		[pnamepy] [varchar] (66) NOT NULL DEFAULT (''),
 		[Standard] [varchar] (120) NOT NULL DEFAULT (''),
 		[Model] [varchar] (60) NOT NULL DEFAULT (''),
 		[Area] [varchar] (30) NOT NULL DEFAULT (''),
+		[UsefulLifeday] [int] NOT NULL DEFAULT (0), --有效期
 		[Costmode] [int] NOT NULL DEFAULT (0),
 		[IsStop] [int] NOT NULL DEFAULT (0),
 
@@ -95,6 +97,7 @@ BEGIN
 	INSERT dbo.tbx_Ptype( PTypeId ,Parid ,PSonnum ,Soncount ,Leveal ,PUsercode ,PFullname ,PComment ,[Standard] ,Model ,Area ,Costmode ,IsStop ,Parrec ,RowIndex ,Deleted ,Updatetag)
 	VALUES  ( '00000' ,'0' ,0 ,0 ,0 ,'000000000' ,'全部商品' ,'' ,'' ,'' ,'' ,0 ,0 ,0 ,0 ,0 ,0)
 END
+GO 
 	
 DELETE dbo.tbx_PackageInfo
 GO 
@@ -131,4 +134,8 @@ GO
 --初始化定义的SQL语句
 INSERT INTO dbo.tbx_DefSQLList ( SQLNo ,DSLKey ,SQLStr ,DSLRemark ,DSLCreateTime ,DSLUpdateTime)
 VALUES  (4001 ,'{DF1C4EA1-D1F2-4150-99CB-317DF61FB17E}' ,'select * from tbx_PackageInfo' ,'查询要加载的包' , GETDATE() ,GETDATE())
+GO
+--初始化定义的SQL语句
+INSERT INTO dbo.tbx_DefSQLList ( SQLNo ,DSLKey ,SQLStr ,DSLRemark ,DSLCreateTime ,DSLUpdateTime)
+VALUES  (1001 ,'{968FCBAC-74E3-43BA-80D3-21248ED828E1}' ,'select * from tbx_Ptype where' ,'商品信息' , GETDATE() ,GETDATE())
 GO

@@ -3,6 +3,9 @@ inherited frmMDIBaseType: TfrmMDIBaseType
   Caption = 'frmMDIBaseType'
   PixelsPerInch = 96
   TextHeight = 13
+  inherited splOP: TSplitter
+    Left = 113
+  end
   inherited pnlTop: TPanel
     Width = 737
   end
@@ -33,15 +36,18 @@ inherited frmMDIBaseType: TfrmMDIBaseType
       TabOrder = 2
     end
   end
-  inherited pnlLeft: TPanel
+  inherited pnlTV: TPanel
     Width = 113
     inherited tvClass: TcxTreeView
       Width = 111
     end
   end
   inherited gridMainShow: TcxGrid
-    Left = 113
-    Width = 624
+    Left = 116
+    Width = 621
+    inherited gridDTVMainShow: TcxGridDBTableView
+      OnCellDblClick = gridDTVMainShowCellDblClick
+    end
   end
   inherited dsMainShow: TDataSource
     Left = 80

@@ -31,6 +31,7 @@ requires
 
 contains
   uOtherExport in 'uOtherExport.pas',
-  uExDef in 'uExDef.pas';
+  uExDef in 'uExDef.pas',
+  uFrmMsgBox in 'uFrmMsgBox.pas' {frmMsgBox};
 
 end.
