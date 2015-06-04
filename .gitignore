@@ -17,6 +17,19 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# delphi temp files
+*.~*
+*.dcu
+*.bpl
+*.dcp
+*.ddp
+*.dsk
+*.exe
+*.dof
+*.cfg
+Test.dll
+wmpj.dsk
+
 # =========================
 # Operating System Files
 # =========================
