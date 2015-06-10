@@ -11,8 +11,9 @@ inherited frmMDIBaseType: TfrmMDIBaseType
   end
   inherited pnlBottom: TPanel
     Width = 737
+    Caption = ''
     object btnAdd: TcxButton
-      Left = 40
+      Left = 16
       Top = 8
       Width = 75
       Height = 25
@@ -20,7 +21,7 @@ inherited frmMDIBaseType: TfrmMDIBaseType
       TabOrder = 0
     end
     object btnModify: TcxButton
-      Left = 144
+      Left = 211
       Top = 8
       Width = 75
       Height = 25
@@ -28,12 +29,44 @@ inherited frmMDIBaseType: TfrmMDIBaseType
       TabOrder = 1
     end
     object btnDelete: TcxButton
-      Left = 240
+      Left = 308
       Top = 8
       Width = 75
       Height = 25
       Action = actDelete
       TabOrder = 2
+    end
+    object btnClass: TcxButton
+      Left = 405
+      Top = 8
+      Width = 75
+      Height = 25
+      Action = actClass
+      TabOrder = 3
+    end
+    object btnList: TcxButton
+      Left = 503
+      Top = 8
+      Width = 75
+      Height = 25
+      Action = actList
+      TabOrder = 4
+    end
+    object btnQuery: TcxButton
+      Left = 600
+      Top = 8
+      Width = 75
+      Height = 25
+      Action = actQuery
+      TabOrder = 5
+    end
+    object btnCopyAdd: TcxButton
+      Left = 113
+      Top = 8
+      Width = 75
+      Height = 25
+      Action = actCopyAdd
+      TabOrder = 6
     end
   end
   inherited pnlTV: TPanel
@@ -71,6 +104,22 @@ inherited frmMDIBaseType: TfrmMDIBaseType
     object actDelete: TAction
       Caption = #21024#38500
       OnExecute = actDeleteExecute
+    end
+    object actClass: TAction
+      Caption = #20998#31867
+      OnExecute = actClassExecute
+    end
+    object actCopyAdd: TAction
+      Caption = #22797#21046#26032#22686
+      OnExecute = actCopyAddExecute
+    end
+    object actList: TAction
+      Caption = #21015#34920
+      OnExecute = actListExecute
+    end
+    object actQuery: TAction
+      Caption = #26597#35810
+      OnExecute = actQueryExecute
     end
   end
 end

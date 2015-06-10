@@ -66,7 +66,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object Label2: TLabel
       Left = 223
-      Top = 77
+      Top = 74
       Width = 57
       Height = 13
       Alignment = taRightJustify
@@ -75,7 +75,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object lbl5: TLabel
       Left = 419
-      Top = 77
+      Top = 74
       Width = 57
       Height = 13
       Alignment = taRightJustify
@@ -84,7 +84,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object lbl6: TLabel
       Left = 11
-      Top = 112
+      Top = 106
       Width = 57
       Height = 13
       Alignment = taRightJustify
@@ -93,7 +93,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object lbl7: TLabel
       Left = 212
-      Top = 112
+      Top = 106
       Width = 68
       Height = 13
       Alignment = taRightJustify
@@ -114,7 +114,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object edtUsercode: TcxButtonEdit
       Left = 72
-      Top = 42
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -126,7 +126,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object edtName: TcxButtonEdit
       Left = 284
-      Top = 42
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -138,7 +138,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object edtPYM: TcxButtonEdit
       Left = 480
-      Top = 42
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -150,7 +150,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object edtStandard: TcxButtonEdit
       Left = 72
-      Top = 77
+      Top = 70
       Properties.Buttons = <
         item
           Default = True
@@ -162,7 +162,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object edtModel: TcxButtonEdit
       Left = 284
-      Top = 77
+      Top = 70
       Properties.Buttons = <
         item
           Default = True
@@ -174,7 +174,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object edtArea: TcxButtonEdit
       Left = 480
-      Top = 77
+      Top = 70
       Properties.Buttons = <
         item
           Default = True
@@ -186,14 +186,20 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object cbbCostMode: TcxComboBox
       Left = 72
-      Top = 112
+      Top = 102
+      Properties.DropDownListStyle = lsFixedList
+      Properties.Items.Strings = (
+        #31227#21160#21152#26435#24179#22343
+        #20808#36827#20808#20986#27861
+        #21518#36827#20808#20986#27861
+        #25163#24037#25351#23450#27861)
       TabOrder = 7
-      Text = 'cbbCostMode'
+      Text = #31227#21160#21152#26435#24179#22343
       Width = 137
     end
     object edtUsefulLifeday: TcxButtonEdit
       Left = 284
-      Top = 112
+      Top = 102
       Properties.Buttons = <
         item
           Default = True
@@ -205,7 +211,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
     end
     object chkStop: TcxCheckBox
       Left = 480
-      Top = 112
+      Top = 102
       Caption = #20572#29992
       TabOrder = 9
       Width = 81

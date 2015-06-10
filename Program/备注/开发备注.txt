@@ -15,3 +15,7 @@ procedure InstallPackage;                                   //安装包
 procedure UnInstallPackage;                                 //卸载包
 procedure RegisterPlugIn(Reg: IRegPlugin);                  //注册插件
 如果要在注册的时候初始化一些东西，可以继承TPlugin，在其中可以调用接口Sys
+
+在对下拉列表赋值取值判断的时候，不要直接用index与数字对比，要与定义的常量对比
+
+少用系统函数，用封装了的系统函数
