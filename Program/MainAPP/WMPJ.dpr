@@ -21,8 +21,7 @@ var
 begin
   Application.Initialize;
   Application.Title := 'WM主程序';
-  Application.HintHidePause := 1000 * 30;
-  Application.CreateForm(TFrmWMPG, FrmWMPG);
+  Application.HintHidePause := 1000 * 10; //指定提示窗口在屏幕上显示的时间
   //加载核心包
   CorePackageFile := ShortString(ExtractFilePath(Paramstr(0)) + 'Core.bpl');
   DBPackageFile := ShortString(ExtractFilePath(Paramstr(0)) + 'DBAccess.bpl');
@@ -33,6 +32,8 @@ begin
     @ProLoad := GetProcAddress(FCorePackageHandle, 'Load');
     @ProInit := GetProcAddress(FCorePackageHandle, 'Init');
 
+    Application.CreateForm(TFrmWMPG, FrmWMPG);//要在初始化Core后创建，不然不能注册IMainForm
+    
     if assigned(ProLoad) then
     begin
       try
@@ -57,7 +58,7 @@ begin
     end;
 
     Application.Run;
-    //程序结束
+//    程序结束
     @ProFinal := GetProcAddress(FCorePackageHandle, 'Final');
     if assigned(ProFinal) then
     begin
@@ -68,7 +69,7 @@ begin
           application.ShowException(E);
       end;
     end;
-    //释放包
+//    释放包
     UnLoadPackage(FCorePackageHandle);
   end
   else Application.MessageBox(pchar('找不到框架核心包[' + string(CorePackageFile)

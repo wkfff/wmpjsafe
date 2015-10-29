@@ -25,7 +25,8 @@ CREATE         PROCEDURE pbx_Base_CreateID
       @createdid VARCHAR(50) OUTPUT ,		--typeid
       @nson INT OUTPUT ,			--sonnum
       @ncount INT OUTPUT ,			--soncount
-      @nparrec INT OUTPUT			--parrec
+      @nparrec INT OUTPUT ,			--parrec
+      @errorValue VARCHAR(50) OUTPUT--返回错误信息
     )
 AS 
     DECLARE @execsql VARCHAR(500)
@@ -48,13 +49,17 @@ AS
 
     SET @flag = 0
     
-    IF @dbname = 'tbx_Ptype' SELECT  @flag = CASE WHEN psonnum > 0 THEN 1 ELSE 0 END FROM tbx_Ptype WHERE   ptypeid = @parid
+    IF @dbname = 'tbx_Base_Ptype' SELECT  @flag = CASE WHEN PSonnum > 0 THEN 1 ELSE 0 END FROM tbx_Base_Ptype WHERE   Ptypeid = @parid
+    IF @dbname = 'tbx_Base_Btype' SELECT  @flag = CASE WHEN BSonnum > 0 THEN 1 ELSE 0 END FROM tbx_Base_Btype WHERE   Btypeid = @parid
+    IF @dbname = 'tbx_Base_Etype' SELECT  @flag = CASE WHEN ESonnum > 0 THEN 1 ELSE 0 END FROM tbx_Base_Etype WHERE   Etypeid = @parid
+    IF @dbname = 'tbx_Base_Dtype' SELECT  @flag = CASE WHEN DSonnum > 0 THEN 1 ELSE 0 END FROM tbx_Base_Dtype WHERE   Dtypeid = @parid
+    IF @dbname = 'tbx_Base_Ktype' SELECT  @flag = CASE WHEN KSonnum > 0 THEN 1 ELSE 0 END FROM tbx_Base_Ktype WHERE   Ktypeid = @parid
     
     IF @flag = 1 GOTO nocheckpard
 
 --exec getsysvalue 'iniover', @iniover output 是否开账
 
-    IF @dbname = 'tbx_Ptype' 
+    IF @dbname = 'tbx_Base_Ptype' 
     BEGIN
 		PRINT '数据检查'
 --判断商品是否满足获取ID的条件
@@ -64,8 +69,12 @@ AS
     nocheckpard:
 --	计算id号
     SET nocount ON
-    IF @dbname = 'tbx_Ptype' DECLARE checkid_cursor CURSOR FOR SELECT  ptypeid ,psonnum ,parid ,soncount ,prec FROM tbx_Ptype WHERE ptypeid = @parid OPEN checkid_cursor
-
+    IF @dbname = 'tbx_Base_Ptype' DECLARE checkid_cursor CURSOR FOR SELECT  ptypeid ,psonnum ,parid ,soncount ,prec FROM tbx_Base_Ptype WHERE Ptypeid = @parid 
+    IF @dbname = 'tbx_Base_Btype' DECLARE checkid_cursor CURSOR FOR SELECT  btypeid ,bsonnum ,parid ,soncount ,brec FROM tbx_Base_Btype WHERE Btypeid = @parid 
+    IF @dbname = 'tbx_Base_Etype' DECLARE checkid_cursor CURSOR FOR SELECT  etypeid ,esonnum ,parid ,soncount ,erec FROM tbx_Base_Etype WHERE Etypeid = @parid 
+    IF @dbname = 'tbx_Base_Dtype' DECLARE checkid_cursor CURSOR FOR SELECT  dtypeid ,dsonnum ,parid ,soncount ,drec FROM tbx_Base_Dtype WHERE Dtypeid = @parid 
+    IF @dbname = 'tbx_Base_Ktype' DECLARE checkid_cursor CURSOR FOR SELECT  ktypeid ,ksonnum ,parid ,soncount ,krec FROM tbx_Base_Ktype WHERE Ktypeid = @parid 
+	OPEN checkid_cursor
     FETCH NEXT FROM checkid_cursor INTO @sztypeid, @sonnum, @par, @soncount, @temprec
 
     SELECT  @nson = @sonnum
@@ -77,18 +86,21 @@ AS
         BEGIN
             CLOSE checkid_cursor
             DEALLOCATE checkid_cursor
-            GOTO error103
+            SET @errorValue = '父亲ID号不存在！'
+            GOTO ErrorGeneral
         END
     ELSE 
         BEGIN 
             DECLARE @tempid VARCHAR(5) , @nreturn INT
             SELECT  @soncount = @soncount + 1
-            EXEC @nreturn= pbx_IntToStr @soncount, @tempid OUT
+            EXEC @nreturn= pbx_Fun_TypeIDIntToStr @soncount, @tempid OUT
             IF @nreturn = -1 
                 BEGIN
                     CLOSE checkid_cursor
                     DEALLOCATE checkid_cursor
-                    GOTO error101
+					SET @errorValue = '获取子ID失败，请稍后重试！'
+					GOTO ErrorGeneral
+
                 END 
             ELSE 
                 BEGIN
@@ -103,21 +115,13 @@ AS
 
     CLOSE checkid_cursor
     DEALLOCATE checkid_cursor
-    GOTO succee
-
-    succee:
+    GOTO Success
+    
+    Success:		 --成功完成函数
     RETURN 0
-
-    error101:  --数据库操作失败！
-    RETURN -101
-
-    error102:  --期初科目有金额；开账后科目有金额；明细有金额不允许分类增加儿子
-    RETURN -102
-
-    error103:  --父id号不存在！
-    RETURN -103
-
-    error104:  --系统行（内部记录）不允许分类
-    RETURN -104
-
+    ErrorGeneral:    --检查数据是错误，不需要回滚
+    RETURN -1   
+    ErrorRollback:   --数据操作是错误，需要回滚
+    --ROLLBACK TRAN insertproc 
+    RETURN -2 
 go

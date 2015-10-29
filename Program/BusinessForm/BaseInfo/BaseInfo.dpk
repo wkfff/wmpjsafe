@@ -46,8 +46,7 @@ requires
 
 contains
   uBaseInfoExport in 'uBaseInfoExport.pas',
-  uFrmBasePtypeInput in 'uFrmBasePtypeInput.pas' {frmBasePtypeInput},
-  uFrmBasePtypeList in 'uFrmBasePtypeList.pas' {frmBasePtypeList};
+  uModuleList in 'uModuleList.pas';
 
 end.
 

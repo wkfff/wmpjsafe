@@ -1,6 +1,6 @@
 inherited frmBasePtypeInput: TfrmBasePtypeInput
-  Left = 201
-  Top = 166
+  Left = 219
+  Top = 201
   Caption = 'frmBasePtypeInput'
   ClientHeight = 404
   ClientWidth = 628
@@ -113,7 +113,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
       Width = 545
     end
     object edtUsercode: TcxButtonEdit
-      Left = 72
+      Left = 75
       Top = 38
       Properties.Buttons = <
         item
@@ -149,7 +149,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
       Width = 137
     end
     object edtStandard: TcxButtonEdit
-      Left = 72
+      Left = 75
       Top = 70
       Properties.Buttons = <
         item
@@ -185,7 +185,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
       Width = 137
     end
     object cbbCostMode: TcxComboBox
-      Left = 72
+      Left = 75
       Top = 102
       Properties.DropDownListStyle = lsFixedList
       Properties.Items.Strings = (
@@ -217,7 +217,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
       Width = 81
     end
     object pgcView: TPageControl
-      Left = 16
+      Left = 15
       Top = 144
       Width = 601
       Height = 161

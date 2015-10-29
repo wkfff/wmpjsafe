@@ -4,6 +4,7 @@ inherited frmBaseInput: TfrmBaseInput
   ClientHeight = 323
   ClientWidth = 513
   Position = poMainFormCenter
+  Visible = False
   PixelsPerInch = 96
   TextHeight = 13
   object pnlBottom: TPanel [0]
@@ -27,6 +28,7 @@ inherited frmBaseInput: TfrmBaseInput
       Width = 75
       Height = 25
       Action = actCannel
+      Caption = #21462#28040'(&C)'
       TabOrder = 1
     end
     object chkAutoAdd: TcxCheckBox

@@ -27,7 +27,6 @@ package DBAccess;
 
 requires
   rtl,
-  Core,
   dbrtl,
   dsnap,
   adortl,

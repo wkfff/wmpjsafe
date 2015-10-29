@@ -48,6 +48,8 @@
 </Parameter>
 <Parameter Name="AInputParams" DataType="OleVariant" Flag="In" >
 </Parameter>
+<Parameter Name="AOutParams" DataType="OleVariant" Flag="Out" >
+</Parameter>
 <Parameter Name="ABackData" DataType="OleVariant" Flag="InOut" >
 </Parameter>
 </Parameters>

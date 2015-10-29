@@ -34,7 +34,7 @@ AS
     IF @cMode = 'I'  --加载包
         BEGIN
             SELECT  *
-            FROM    tbx_PackageInfo
+            FROM    tbx_Base_PackageInfo
             WHERE   Parid = @szTypeid
             ORDER BY RowIndex , ITypeId
         END 
@@ -43,8 +43,44 @@ AS
         BEGIN
 		    --exec p_hh_GetRightStr 'P','p',@OperatorID,'N',@TableStr out,@TableWhereStr out		
             SELECT  @sql = 'SELECT *
-					FROM  tbx_Ptype p
-			         WHERE  p.PARID = ''' + @szTypeid + ''' and p.deleted = 0 ORDER BY RowIndex,p.ptypeid'		
+					FROM  tbx_Base_Ptype p
+			         WHERE  p.PARID = ''' + @szTypeid + ''' and p.deleted = 0 ORDER BY RowIndex, p.ptypeid'		
+            PRINT ( @sql )
+            EXEC(@sql)
+        END
+    IF @cMode = 'B'  --单位信息
+        BEGIN
+		    --exec p_hh_GetRightStr 'B','b',@OperatorID,'N',@TableStr out,@TableWhereStr out		
+            SELECT  @sql = 'SELECT *
+					FROM  tbx_Base_Btype b
+			         WHERE  b.PARID = ''' + @szTypeid + ''' and b.deleted = 0 ORDER BY RowIndex, b.btypeid'		
+            PRINT ( @sql )
+            EXEC(@sql)
+        END
+    IF @cMode = 'E'  --职员信息
+        BEGIN
+		    --exec p_hh_GetRightStr 'B','b',@OperatorID,'N',@TableStr out,@TableWhereStr out		
+            SELECT  @sql = 'SELECT *
+					FROM  tbx_Base_Etype b
+			         WHERE  b.PARID = ''' + @szTypeid + ''' and b.deleted = 0 ORDER BY RowIndex, b.Etypeid'		
+            PRINT ( @sql )
+            EXEC(@sql)
+        END
+    IF @cMode = 'D'  --部门信息
+        BEGIN
+		    --exec p_hh_GetRightStr 'B','b',@OperatorID,'N',@TableStr out,@TableWhereStr out		
+            SELECT  @sql = 'SELECT *
+					FROM  tbx_Base_Dtype b
+			         WHERE  b.PARID = ''' + @szTypeid + ''' and b.deleted = 0 ORDER BY RowIndex, b.Dtypeid'		
+            PRINT ( @sql )
+            EXEC(@sql)
+        END
+    IF @cMode = 'K'  --仓库信息
+        BEGIN
+		    --exec p_hh_GetRightStr 'B','b',@OperatorID,'N',@TableStr out,@TableWhereStr out		
+            SELECT  @sql = 'SELECT *
+					FROM  tbx_Base_Ktype b
+			         WHERE  b.PARID = ''' + @szTypeid + ''' and b.deleted = 0 ORDER BY RowIndex, b.Ktypeid'		
             PRINT ( @sql )
             EXEC(@sql)
         END
