@@ -290,7 +290,7 @@ IF OBJECT_ID('dbo.tbx_Bill_Order_D') IS NULL
 		  [Unit] INT NOT NULL DEFAULT (1),--多单位的时候对应的单位
 		  [UnitRate] NUMERIC(22, 10) NOT NULL DEFAULT (0),--此单位跟基本单位的换算关系
 		  
-		  [Blockno] VARCHAR(20) NOT NULL DEFAULT (''),--批号
+		  [BlockNo] VARCHAR(20) NOT NULL DEFAULT (''),--批号
 		  [ProDate] VARCHAR(10) NOT NULL DEFAULT (''),--生产日期
 		  [UsefulEndDate] VARCHAR(10) NOT NULL DEFAULT (''),--有效期至
 		  [JhDate] VARCHAR(50) NOT NULL DEFAULT (''),--交货日期
@@ -303,8 +303,9 @@ IF OBJECT_ID('dbo.tbx_Bill_Order_D') IS NULL
 		  
 		  [DisCount] NUMERIC(22, 10) NOT NULL DEFAULT (1),--折扣
 		  [DisCountPrice] NUMERIC(22, 10) NOT NULL DEFAULT (0),--折后单价
-		  [disCountTotal] NUMERIC(22, 10) NOT NULL DEFAULT (0),--折后金额
+		  [DisCountTotal] NUMERIC(22, 10) NOT NULL DEFAULT (0),--折后金额
 		  
+		  [TaxRate] NUMERIC(22, 10) NOT NULL DEFAULT (0),--税率
 		  [TaxPrice] NUMERIC(22, 10) NOT NULL DEFAULT (0),--含税单价
 		  [TaxTotal] NUMERIC(22, 10) NOT NULL DEFAULT (0),--含税金额
 

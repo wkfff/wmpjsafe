@@ -93,9 +93,11 @@ inherited frmMDIBill: TfrmMDIBill
     end
     object actSaveDraft: TAction
       Caption = #23384#20026#33609#31295
+      OnExecute = actSaveDraftExecute
     end
     object actSaveSettle: TAction
       Caption = #30452#25509#36807#36134
+      OnExecute = actSaveSettleExecute
     end
   end
   inherited imglstBtn: TcxImageList
