@@ -13,7 +13,8 @@ object WMFBData: TWMFBData
   object conDB: TADOConnection
     ConnectionString = 
       'Provider=SQLOLEDB.1;Password=123456;Persist Security Info=True;U' +
-      'ser ID=sa;Initial Catalog=wmpj;Data Source=127.0.0.1'
+      'ser ID=sa;Initial Catalog=wmpj;Data Source=127.0.0.1\MSSQLSERVER' +
+      '2008R'
     Provider = 'SQLOLEDB.1'
     Left = 40
     Top = 16

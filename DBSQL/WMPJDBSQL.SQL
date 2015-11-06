@@ -224,6 +224,7 @@ IF OBJECT_ID('dbo.tbx_Sys_TbxCfg') IS NULL
         (
           [TbxId] INT NOT NULL , --表格在SysObjects表的系统ID
           [TbxName] VARCHAR(50) NOT NULL DEFAULT '' ,
+          [TbxDefName] VARCHAR(50) NOT NULL DEFAULT '' ,--别名
           [TbxType] INT NOT NULL DEFAULT -1 , --表格类型：-1未定义；0基本信息；1单据；2其它
           [TbxRowIndex] INT NOT NULL DEFAULT 0 ,--排列顺序
           [TbxComment] VARCHAR(200) NOT NULL DEFAULT '' , 
@@ -231,6 +232,18 @@ IF OBJECT_ID('dbo.tbx_Sys_TbxCfg') IS NULL
         )
         
 GO
+
+--系统-数量，单价，金额，折扣，税率，关系和比率(%)的小数位数配置
+IF OBJECT_ID('dbo.tbx_Sys_DitDef') IS NULL 
+	CREATE TABLE [dbo].[tbx_Sys_DitDef]
+	(
+		[DitId] INT NOT NULL IDENTITY(1, 1),
+		[DitDefName] VARCHAR (100) NOT NULL  DEFAULT (''),
+		[DitDefValue] VARCHAR (100) NOT NULL  DEFAULT (''),
+		[DitDefComment] VARCHAR (100) NOT NULL  DEFAULT ('')
+		) ON [PRIMARY]
+	GO
+
 
 --单据-进货或者销售订单主表
 IF OBJECT_ID('dbo.tbx_Bill_Order_M') IS NULL 
@@ -279,6 +292,7 @@ IF OBJECT_ID('dbo.tbx_Bill_Order_D') IS NULL
           [VchType] INT NOT NULL DEFAULT (0) ,--单据类型
           [DlyOrder] INT NOT NULL IDENTITY(1, 1),--数据库中行序号,可以用来关联行的其它相关信息
           [ColRowNo] INT NOT NULL DEFAULT (0),--界面显示的行顺序
+          [AtypeId] VARCHAR(50) NOT NULL DEFAULT (''),--会计科目
 		  [BtypeId] VARCHAR(50) NOT NULL DEFAULT (''),--供货或收货单位
 		  [EtypeId] VARCHAR(50) NOT NULL DEFAULT (''),--经手人
 		  [DtypeId] VARCHAR(50) NOT NULL DEFAULT (''),--部门
@@ -317,9 +331,9 @@ IF OBJECT_ID('dbo.tbx_Bill_Order_D') IS NULL
 		  [CostPrice] NUMERIC (22, 10) NOT NULL DEFAULT (0),--成本单价
 		  [CostTotal] NUMERIC (22, 10) NOT NULL DEFAULT (0),--成本金额
 		
-		  [OrderVchType] [int] NOT NULL DEFAULT (0),--调用的其它单据的类型(调用询价单或者销售订单等)
-		  [OrderCode] [int] NOT NULL DEFAULT (0),--调用的其它单据的主表ID
-		  [OrderDlyCode] [int] NOT NULL DEFAULT (0),--调用的其它单据的从表ID
+		  [OrderVchType] INT NOT NULL DEFAULT (0),--调用的其它单据的类型(调用询价单或者销售订单等)
+		  [OrderCode] INT NOT NULL DEFAULT (0),--调用的其它单据的主表ID
+		  [OrderDlyCode] INT NOT NULL DEFAULT (0),--调用的其它单据的从表ID
 		  
 		  [PStutas] INT NOT NULL DEFAULT (0),--是否是赠品；0不是；1是
 		  [ToQty] NUMERIC(22, 10) NOT NULL DEFAULT (0),--到货数量
@@ -373,7 +387,7 @@ IF OBJECT_ID('dbo.tbx_Sys_DefSQL') IS NULL
         
 GO
 
-DELETE dbo.tbx_Base_PackageInfo
+TRUNCATE TABLE  dbo.tbx_Base_PackageInfo
 GO 
 ---初始化加载项
 INSERT dbo.tbx_Base_PackageInfo ( ITypeId ,Parid ,ISonnum ,Soncount ,Leveal ,IUsercode ,IFullname ,INamepy ,IComment ,ISystem ,RowIndex)
@@ -398,20 +412,37 @@ INSERT dbo.tbx_Base_PackageInfo ( ITypeId ,Parid ,ISonnum ,Soncount ,Leveal ,IUs
 VALUES  ( '00009' ,'00000' ,0 ,0 ,1 ,'Testdll.dll' ,'Testdll.dll' ,'Testdll.dll' ,'测试DLL' ,0, 8)
 GO 
 
-DELETE dbo.tbx_Sys_FrmParams
+TRUNCATE TABLE  dbo.tbx_Sys_FrmParams
 GO 
 --初始化窗体和对应的模块编号参数, MoudleNo要与uMoudleNoDef的对应
 INSERT INTO dbo.tbx_Sys_FrmParams ( MoudleNo ,FMPKey ,DefaultCaption ,ShowCaption ,ClassName ,ParamList , DefaultParams )
 VALUES  (101, '{1382E20F-642F-4662-A863-7F90F6E04CC7}' , '系统加载模块' , '系统加载模块' , 'TfrmLoadItemSet' , '' , '' )
 GO
 
-DELETE tbx_Sys_DefSQL
+TRUNCATE TABLE  tbx_Sys_DefSQL
 GO
 --初始化定义的SQL语句
 INSERT INTO dbo.tbx_Sys_DefSQL ( SQLNo ,DSLKey ,SQLStr ,DSLRemark ,DSLCreateTime ,DSLUpdateTime)
 VALUES  (4001 ,'{DF1C4EA1-D1F2-4150-99CB-317DF61FB17E}' ,'select * from tbx_Base_PackageInfo' ,'查询要加载的包' , GETDATE() ,GETDATE())
 GO
---初始化定义的SQL语句
 INSERT INTO dbo.tbx_Sys_DefSQL ( SQLNo ,DSLKey ,SQLStr ,DSLRemark ,DSLCreateTime ,DSLUpdateTime)
 VALUES  (1001 ,'{968FCBAC-74E3-43BA-80D3-21248ED828E1}' ,'select * from tbx_Base_Ptype where' ,'商品信息' , GETDATE() ,GETDATE())
 GO
+
+
+TRUNCATE TABLE dbo.tbx_Sys_DitDef
+--数量等的小数位数
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitQty' , '4' ,'数量位数')
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitPrice' , '8' ,'单价位数')
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitTotal' , '2' ,'金额位数')
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitDisCount' , '4' ,'折扣位数')
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitTax' , '0' ,'税率位数')
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitUnitRate' , '6' ,'关系')
+INSERT INTO dbo.tbx_Sys_DitDef( DitDefName ,DitDefValue ,DitDefComment)
+VALUES  ( 'DitcentRate' , '2' ,'比率(%)')
