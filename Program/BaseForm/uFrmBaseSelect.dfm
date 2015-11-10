@@ -32,7 +32,6 @@ inherited frmBaseSelect: TfrmBaseSelect
       Left = 16
       Top = 8
       TabOrder = 1
-      Text = 'cbbQueryType'
       Width = 145
     end
     object edtFilter: TcxButtonEdit
@@ -62,6 +61,7 @@ inherited frmBaseSelect: TfrmBaseSelect
       Align = alClient
       TabOrder = 0
       object gridTVMainShow: TcxGridTableView
+        OnKeyDown = gridTVMainShowKeyDown
         NavigatorButtons.ConfirmDelete = False
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -78,6 +78,7 @@ inherited frmBaseSelect: TfrmBaseSelect
     end
     object actSelect: TAction
       Caption = #36873#20013
+      OnExecute = actSelectExecute
     end
   end
 end
