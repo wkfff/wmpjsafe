@@ -39,14 +39,13 @@ inherited frmBaseSelect: TfrmBaseSelect
       Top = 8
       Properties.Buttons = <>
       TabOrder = 2
-      Text = 'edtFilter'
       Width = 257
     end
     object btnQuery: TcxButton
       Left = 432
-      Top = 6
-      Width = 67
-      Height = 25
+      Top = 8
+      Width = 70
+      Height = 21
       Action = actQuery
       TabOrder = 3
     end
@@ -63,6 +62,7 @@ inherited frmBaseSelect: TfrmBaseSelect
       object gridTVMainShow: TcxGridTableView
         OnKeyDown = gridTVMainShowKeyDown
         NavigatorButtons.ConfirmDelete = False
+        OnCellDblClick = gridTVMainShowCellDblClick
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>

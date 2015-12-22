@@ -39,9 +39,12 @@ const
   fnMdlBillOrderBuy = fnBill + 0001; //进货订单
   fnMdlBillOrderSale = fnBill + 0002; //销售订单
   fnMdlBillBuy = fnBill + 0003; //进货单
+  fnMdlBillSale = fnBill + 0004; //销售单
 
   //报表-----------------------------------3000---------------------
   fnMdlReportGoods = fnReport + 0001; //商品库存情况
+  fnMdlReportOrderBuy = fnReport + 0002; //进货订单统计
+  fnMdlReportBuy = fnReport + 0003; //进货单统计
 
   //系统设置-------------------------------4000---------------------
   fnMdlLoadItemSet = fnSystem + 0001; //加载包设置

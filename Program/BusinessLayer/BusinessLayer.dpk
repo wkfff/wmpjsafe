@@ -42,6 +42,7 @@ contains
   uModelBaseList in 'uModelBaseList.pas',
   uBusinessLayer in 'uBusinessLayer.pas',
   uModelSys in 'uModelSys.pas',
+  uModelReport in 'uModelReport.pas',
   uModelBill in 'uModelBill.pas';
 
 end.
