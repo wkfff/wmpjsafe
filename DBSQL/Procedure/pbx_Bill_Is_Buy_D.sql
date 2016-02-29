@@ -65,7 +65,8 @@ AS
     DECLARE @Splitstr VARCHAR(10)
     SET @Splitstr = 'игипи╕'
 
-
+	SELECT @Ret = -1
+	
     BEGIN TRAN OrderSaveDly
 
     SELECT  @BeginOrderDly = ISNULL(MAX(DlyOrder), 0)
