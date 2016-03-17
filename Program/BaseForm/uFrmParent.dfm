@@ -1,6 +1,6 @@
 object frmParent: TfrmParent
-  Left = 309
-  Top = 272
+  Left = 310
+  Top = 273
   Width = 752
   Height = 356
   Caption = 'frmParent'
@@ -13,6 +13,7 @@ object frmParent: TfrmParent
   OldCreateOrder = False
   Position = poDefault
   Visible = True
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96

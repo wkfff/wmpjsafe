@@ -1,6 +1,6 @@
 object FrmWMPG: TFrmWMPG
-  Left = 68
-  Top = 108
+  Left = 69
+  Top = 109
   Width = 1076
   Height = 517
   Caption = #20027#31243#24207

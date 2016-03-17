@@ -135,14 +135,14 @@ AS
                     ISNULL(UsefulEndDate.Col, '') ,
                     ISNULL(JhDate.Col, '') ,
                     ISNULL(Goodsno.Col, '') ,
-                    dbo.Fun_CovToQty(ISNULL(P.URate, 1) * ISNULL(AssQty.Col, 0)) Qty ,
-                    dbo.Fun_CovToPrice(ISNULL(AssPrice.Col, 0) / ISNULL(P.URate, 1)) Price ,
+                    dbo.Fun_CovToQty(dbo.Fun_StrToNumeric(P.URate, 1) * dbo.Fun_StrToNumeric(AssQty.Col, 0)) Qty ,
+                    dbo.Fun_CovToPrice(dbo.Fun_StrToNumeric(AssPrice.Col, 0) / dbo.Fun_StrToNumeric(P.URate, 1)) Price ,
                     ISNULL(Total.Col, 0) ,
                     ISNULL(Discount.Col, 0) ,
-                    dbo.Fun_CovToPrice(ISNULL(AssDiscountPrice.Col, 0) / ISNULL(P.URate, 1)) DiscountPrice ,
+                    dbo.Fun_CovToPrice(dbo.Fun_StrToNumeric(AssDiscountPrice.Col, 0) / dbo.Fun_StrToNumeric(P.URate, 1)) DiscountPrice ,
                     ISNULL(DiscountTotal.Col, 0) ,
                     ISNULL(TaxRate.Col, 0) ,
-                    dbo.Fun_CovToPrice(ISNULL(AssTaxPrice.Col, 0) / ISNULL(P.URate, 1)) TaxPrice ,
+                    dbo.Fun_CovToPrice(dbo.Fun_StrToNumeric(AssTaxPrice.Col, 0) / dbo.Fun_StrToNumeric(P.URate, 1)) TaxPrice ,
                     ISNULL(TaxTotal.col, 0) ,
                     ISNULL(AssQty.Col, -11) ,
                     ISNULL(AssPrice.Col, 0) ,
@@ -200,8 +200,8 @@ AS
                     LEFT JOIN dbo.Fun_SplitStr(@Comment, @splitstr) Comment ON szRowId.Id = Comment.Id
                     LEFT JOIN ( SELECT  pu.Id ,
                                         pu.PtypeId ,
-                                        1 Unit ,
-                                        1 URate --ISNULL(URate, 1) URate
+                                        1.0 Unit ,--URate
+                                        1.0 URate --ISNULL(URate, 1) URate --URate必须是1.0，不然在Fun_CovToQty时参数不能转换为NUMERIC类型
                                 FROM    ( SELECT    PtypeIdlist.Id ,
                                                     PtypeIdlist.col PtypeId ,
                                                     1 unit--unit.col unit

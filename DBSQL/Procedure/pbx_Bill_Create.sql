@@ -83,7 +83,7 @@ AS
     
     SET @nRet = 0
     BEGIN TRAN Account
-------------------------------进货单------------------------------
+------------------------------进货单---------------------------
     IF @aVchType = 3 
         BEGIN
             SELECT  @execsql = 'declare CreateDly_cursor cursor for 
@@ -151,7 +151,80 @@ AS
             DEALLOCATE CreateDly_cursor
             GOTO Finish
         END
-------------------------------进货单处理结束--------------------------
+------------------------------进货单处理结束----------------------
+
+------------------------------销售单------------------------------
+    IF @aVchType = 4 
+        BEGIN
+            SELECT  @execsql = 'declare CreateDly_cursor cursor for 
+								select ColRowNo, ATypeID, PTypeID, KTypeID, Qty, Price, Total, Blockno, Prodate, Unit, UnitRate
+                                from tbx_Bill_D_Bak where Vchcode= ' + CAST(@NewVchCode AS VARCHAR(10))
+            EXEC (@execsql)
+            
+            OPEN CreateDly_cursor
+
+            WHILE 0 = 0 
+                BEGIN
+                    FETCH NEXT FROM CreateDly_cursor INTO @aColRowNo, @aATypeID, @aPTypeID, @aKTypeID, @aQty, @aPrice, @aTotal, @ablockno, @aprodate, @aUnit, @aUnitRate
+                    IF @@FETCH_STATUS <> 0 
+                        BREAK
+                    
+                    SET @aQty = -@aQty
+                    SET @aTotal = -@aTotal 
+                    
+                    EXEC @nRet = pbx_Bill_ModifyDbf @aVchType, @OldVchCode, @GOODS_ID, @aPTypeID, '', @aETypeID, @aKTypeID, @aPeriod, @aQty, @aTotal, @aBlockno, @aProdate, 0, @aUnit, @aUnitRate, @ErrorValue
+                    IF @nRet < 0 
+                        GOTO ErrorRollback
+                        
+                    INSERT dbo.tbx_Bill_Sale_D ( VchCode, VchType, ColRowNo, ATypeID, PTypeID, KTypeID, Qty, Price, Total, Blockno, Prodate, Unit, UnitRate )
+                    VALUES  ( @NewvchCode, @aVchType, @aColRowNo, @aATypeID, @aPTypeID, @aKTypeID, @aQty, @aPrice, @aTotal, @aBlockno, @aProdate, @aUnit, @aUnitRate)
+                    IF @@rowcount <= 0 
+                    BEGIN
+						SET @ErrorValue = '插入明细失败！'
+						GOTO ErrorRollback		
+                    END
+                        
+--			--库存商品增加
+--            IF @dTempTotal <> 0 
+--                BEGIN
+--                    INSERT  INTO dlya ( vchcode, Date, VchType, ATypeID, BTypeID, ETypeID, KTypeID, Total, period, YearPeriod, UsedType, DeptID )
+--                    VALUES  ( @nVchcode, @tDate, @nVchType, @GOODS_ID, @szBTypeID, @szETypeID, @szKTypeID, @dTempTotal, @nPeriod, @nYearPeriod, '', @DeptID )
+--                    IF @@rowcount <= 0 
+--                        GOTO error1
+--                END
+--			--应收应付
+--            SELECT  @dTemp = @dTotalMoney - @dTotalInMoney - @dPreferential
+--            IF @dTemp <> 0
+--               -- if @dTotalInMoney <> @dTotalMoney
+--                BEGIN
+--                 --       select @dTemp = @dTotalMoney-@dTotalInMoney
+--                    INSERT  INTO dlya ( vchcode, Date, VchType, ATypeID, BTypeID, ETypeID, KTypeID, Total, period, YearPeriod, UsedType, DeptID )
+--                    VALUES  ( @nVchcode, @tDate, @nVchType, @AP_ID, @szBTypeID, @szETypeID, @szKTypeID, @dTemp, @nPeriod, @nYearPeriod, '', @DeptID )
+--                    IF @@rowcount <= 0 
+--                        GOTO error1
+--                END
+
+--            SELECT  @dTemp = @dFeeEditTotal - @dFeePayTotal
+            
+--            IF @dTemp <> 0 
+--                BEGIN
+--                    INSERT  INTO dlya ( vchcode, Date, Vchtype, ATypeID, BTypeID, ETypeID, KTypeID, Total, Period, YearPeriod, UsedType, DeptID )
+--                    VALUES  ( @nVchcode, @tDate, @nVchtype, @AP_ID, @szFeeBtypeID, @szETypeID, @szKTypeID, @dTemp, @nPeriod, @nYearPeriod, '', @DeptID )
+--                    IF @@rowcount <= 0 
+--                        GOTO error1
+--                END
+
+--            UPDATE  dlyndx
+--            SET     Total = ABS(@dTotalMoney), InvoceTag = @nInvTag
+--            WHERE   vchcode = @nVchcode
+--            IF @@rowcount <= 0 
+--                GOTO error1
+                END --cursor while end
+            CLOSE CreateDly_cursor
+            DEALLOCATE CreateDly_cursor
+            GOTO Finish
+        END
+------------------------------销售单处理结束--------------------------
 
     Success:		 --成功完成函数
     RETURN 0
