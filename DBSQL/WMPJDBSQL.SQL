@@ -210,11 +210,50 @@ BEGIN
 		[Deleted] BIT NOT NULL DEFAULT 0,
 		[Updatetag] INT NOT NULL DEFAULT 0,
 		
-		[IsStop] int  NOT NULL DEFAULT (0)--是否停用 
+		[IsStop] INT  NOT NULL DEFAULT (0)--是否停用 
 		CONSTRAINT PK_tbx_Base_Dtype PRIMARY KEY ([DTypeId])
 	)
 	INSERT dbo.tbx_Base_Dtype( DTypeId ,Parid ,Leveal ,DUsercode ,DFullname)
 	VALUES  ( '00000' ,'0' ,0 ,'000000000' ,'全部部门')
+END
+GO 
+
+--单据类型
+IF OBJECT_ID('dbo.tbx_Base_Vtype') IS NULL 
+BEGIN
+	CREATE TABLE tbx_Base_Vtype
+	(
+		[VTypeId] VARCHAR(50) ,
+		[Parid] VARCHAR(50) NOT NULL DEFAULT '' ,
+		[VSonnum] INT NOT NULL DEFAULT 0 ,
+		[Soncount] INT NOT NULL DEFAULT 0 , 
+		[Leveal] INT NOT NULL DEFAULT 1 ,
+		[VUsercode] VARCHAR(20) NOT NULL DEFAULT '' ,
+		[VFullname] VARCHAR(20) NOT NULL DEFAULT '' ,
+		[VComment] VARCHAR(255) NOT NULL DEFAULT '' ,
+		[VNamepy] VARCHAR(66) NOT NULL DEFAULT (''),
+		[VRec] INT NOT NULL IDENTITY(1, 1),
+		[Parrec] INT NOT NULL DEFAULT 0,
+		[RowIndex] INT NOT NULL DEFAULT 0 ,
+		[Deleted] BIT NOT NULL DEFAULT 0,
+		[Updatetag] INT NOT NULL DEFAULT 0,
+		
+		[VchType] INT  NOT NULL DEFAULT (0), --定义的单据MoudleNo好
+		[NumberPrefix] VARCHAR(255) NOT NULL DEFAULT '', --单据编号前缀 如:XS
+		[SNFormat] VARCHAR(255) NOT NULL DEFAULT '' --单据编号生成格式 如:"XS" - yyyy - mm - dd - [000] 
+		CONSTRAINT PK_tbx_Base_Vtype PRIMARY KEY ([VTypeId])
+	)
+	INSERT dbo.tbx_Base_Vtype( VTypeId ,Parid ,Leveal ,VUsercode ,VFullname, VSonnum, Soncount)
+	VALUES  ( '00000' ,'0' ,0 ,'000000000' ,'全部单据', 5, 4)
+	
+	INSERT dbo.tbx_Base_Vtype( VTypeId ,Parid ,Leveal ,VUsercode ,VFullname, VchType, NumberPrefix, SNFormat)
+	VALUES  ( '00001' ,'00000' ,1 ,'00001' ,'进货订单', 1, 'JHD', '"JHD" - yyyy - mm - dd - [000]')
+	INSERT dbo.tbx_Base_Vtype( VTypeId ,Parid ,Leveal ,VUsercode ,VFullname, VchType, NumberPrefix, SNFormat)
+	VALUES  ( '00002' ,'00000' ,1 ,'00002' ,'销售订单', 2, 'XSD', '"SHD" - yyyy - mm - dd - [000]')
+	INSERT dbo.tbx_Base_Vtype( VTypeId ,Parid ,Leveal ,VUsercode ,VFullname, VchType, NumberPrefix, SNFormat)
+	VALUES  ( '00003' ,'00000' ,1 ,'00003' ,'进货单', 3, 'JH', '"JH" - yyyy - mm - dd - [000]')
+	INSERT dbo.tbx_Base_Vtype( VTypeId ,Parid ,Leveal ,VUsercode ,VFullname, VchType, NumberPrefix, SNFormat)
+	VALUES  ( '00004' ,'00000' ,1 ,'00004' ,'销售单', 4, 'XS', '"XS" - yyyy - mm - dd - [000]')
 END
 GO 
 
@@ -699,7 +738,7 @@ TRUNCATE TABLE  dbo.tbx_Base_PackageInfo
 GO 
 ---初始化加载项
 INSERT dbo.tbx_Base_PackageInfo ( ITypeId ,Parid ,ISonnum ,Soncount ,Leveal ,IUsercode ,IFullname ,INamepy ,IComment ,ISystem ,RowIndex)
-VALUES  ( '00000' ,'' ,7 ,7 ,0 ,'全部加载项' ,'全部加载项' ,'全部加载项' ,'全部加载项' ,1, 0)
+VALUES  ( '00000' ,'' ,10 ,9 ,0 ,'全部加载项' ,'全部加载项' ,'全部加载项' ,'全部加载项' ,1, 0)
 INSERT dbo.tbx_Base_PackageInfo ( ITypeId ,Parid ,ISonnum ,Soncount ,Leveal ,IUsercode ,IFullname ,INamepy ,IComment ,ISystem ,RowIndex)
 VALUES  ( '00001' ,'00000' ,0 ,0 ,1 ,'Other.bpl' ,'Other.bpl' ,'Other.bpl' ,'其它操作' ,1, 0)
 INSERT dbo.tbx_Base_PackageInfo ( ITypeId ,Parid ,ISonnum ,Soncount ,Leveal ,IUsercode ,IFullname ,INamepy ,IComment ,ISystem ,RowIndex)

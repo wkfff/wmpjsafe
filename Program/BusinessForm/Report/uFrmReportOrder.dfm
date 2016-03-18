@@ -1,7 +1,12 @@
-inherited frmReportOrderSale: TfrmReportOrderSale
-  Caption = 'frmReportOrderSale'
+inherited frmReportOrder: TfrmReportOrder
+  Caption = 'frmReportOrder'
   PixelsPerInch = 96
   TextHeight = 13
+  inherited gridMainShow: TcxGrid
+    inherited gridTVMainShow: TcxGridTableView
+      OnCellDblClick = gridTVMainShowCellDblClick
+    end
+  end
   inherited imglstBtn: TcxImageList
     FormatVersion = 1
   end
