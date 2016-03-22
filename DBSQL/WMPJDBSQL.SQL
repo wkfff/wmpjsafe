@@ -78,6 +78,21 @@ BEGIN
 END
 GO 
 	
+--商品的多单位信息
+IF OBJECT_ID('dbo.tbx_Base_PtypeUnit') IS NULL 
+	CREATE TABLE [dbo].[tbx_Base_PtypeUnit]
+	(
+		[PTypeId] VARCHAR(50) NOT NULL  DEFAULT (''),
+		[UnitName] VARCHAR (10) NOT NULL  DEFAULT (''),--辅助单位的名称
+		[URate] NUMERIC(22, 10) NOT NULL DEFAULT (0),--和基本单位的比例如1:100
+		[IsBase] INT NOT NULL  DEFAULT (0),--是否是系统基本的单位
+		[BarCode] VARCHAR(60) NOT NULL  DEFAULT (''),--商品对应的条码
+		[Comment] VARCHAR (200) NOT NULL  DEFAULT (''),
+		[OrdId] VARCHAR (21) NOT NULL  DEFAULT ('')	--顺序，0：系统默认，1：辅助单位1,2：辅助单位2
+		CONSTRAINT PK_tbx_Base_PtypeUnit PRIMARY KEY ([PTypeId], [OrdId]) ON [PRIMARY]
+		)
+GO
+	
 --单位信息
 IF OBJECT_ID('dbo.tbx_Base_Btype') IS NULL 
 BEGIN
@@ -256,6 +271,20 @@ BEGIN
 	VALUES  ( '00004' ,'00000' ,1 ,'00004' ,'销售单', 4, 'XS', '"XS" - yyyy - mm - dd - [000]')
 END
 GO 
+
+--单据-单据号的记录
+IF OBJECT_ID('dbo.tbx_Bill_NumberRecords') IS NULL 
+    CREATE TABLE [dbo].[tbx_Bill_NumberRecords]
+        (
+          [ComputerID] VARCHAR(10) NOT NULL ,--计算机号,可以在所有单据中加前缀
+          [VchType] INT NOT NULL DEFAULT ( 0 ) ,--单据类型
+          [LoopType] INT NOT NULL DEFAULT ( 1 ) ,--编号循环类型，是一天0，一月1，还是一年2，开始重新生成
+          [Period] INT NOT NULL DEFAULT ( 0 ) ,--此记录所在的循环期间
+          [MaxNo] INT NOT NULL DEFAULT ( 0 ) ,--此记录条件下产生的最大单据号
+          CONSTRAINT PK_tbx_Bill_NumberRecords PRIMARY KEY ( [ComputerID], [VchType], [MaxNo] ) ON [PRIMARY]
+        )
+        
+GO
 
 --系统-所有用户表格定义的相关信息
 IF OBJECT_ID('dbo.tbx_Sys_TbxCfg') IS NULL 
