@@ -692,6 +692,24 @@ IF OBJECT_ID('dbo.tbx_Bill_Sale_D') IS NULL
         )
         
 GO
+
+--期初库存信息表
+IF OBJECT_ID('dbo.tbx_Stock_Goods_Ini') IS NULL 
+    CREATE TABLE [dbo].[tbx_Stock_Goods_Ini]
+        (
+          [GoodsOrderId] INT NOT NULL IDENTITY(1, 1) ,
+          [PTypeId] VARCHAR(50) NOT NULL DEFAULT '' ,
+          [KTypeId] VARCHAR(50) NOT NULL DEFAULT '' ,
+		  [JobNumber] VARCHAR(20)  NOT NULL DEFAULT (''),
+		  [OutFactoryDate] VARCHAR(13)  NOT NULL DEFAULT (''),
+		  [Qty] NUMERIC(22, 10) NOT NULL DEFAULT (0),
+		  [Price] NUMERIC(22, 10) NOT NULL DEFAULT (0),
+		  [Total] NUMERIC(22, 10) NOT NULL DEFAULT (0),
+		  [GoodsOrder] INT NOT NULL DEFAULT (0)	--显示顺序
+          CONSTRAINT PK_tbx_Stock_Goods_Ini PRIMARY KEY ( [PTypeId], [KTypeId] )
+        )     
+GO
+
 --库存信息表
 IF OBJECT_ID('dbo.tbx_Stock_Goods') IS NULL 
     CREATE TABLE [dbo].[tbx_Stock_Goods]

@@ -66,6 +66,7 @@ inherited frmDialog: TfrmDialog
     end
     object actCancel: TAction
       Caption = #21462#28040'(&C)'
+      OnExecute = actCancelExecute
     end
   end
 end

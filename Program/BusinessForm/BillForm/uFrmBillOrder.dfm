@@ -5,7 +5,6 @@ inherited frmBillOrder: TfrmBillOrder
   TextHeight = 13
   inherited pnlTop: TPanel
     Width = 824
-    TabOrder = 1
     inherited pnlBillTitle: TPanel
       Width = 822
       inherited lblBillTitle: TcxLabel

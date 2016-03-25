@@ -234,6 +234,7 @@ inherited frmBasePtypeInput: TfrmBasePtypeInput
           TabOrder = 0
           object gridTVPtypeUnit: TcxGridTableView
             NavigatorButtons.ConfirmDelete = False
+            OnEditing = gridTVPtypeUnitEditing
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>

@@ -99,7 +99,7 @@ AS
                     IF @@FETCH_STATUS <> 0 
                         BREAK
                         
-                    EXEC @nRet = pbx_Bill_ModifyDbf @aVchType, @OldVchCode, @GOODS_ID, @aPTypeID, '', @aETypeID, @aKTypeID, @aPeriod, @aQty, @aTotal, @aBlockno, @aProdate, 0, @aUnit, @aUnitRate, @ErrorValue
+                    EXEC @nRet = pbx_Bill_ModifyDbf @aVchType, @OldVchCode, @GOODS_ID, @aPTypeID, '', @aETypeID, @aKTypeID, @aPeriod, @aQty, @aTotal, @aBlockno, @aProdate, 0, @aUnit, @aUnitRate, @ErrorValue OUT
                     IF @nRet < 0 
                         GOTO ErrorRollback
                         
@@ -172,7 +172,7 @@ AS
                     SET @aQty = -@aQty
                     SET @aTotal = -@aTotal 
                     
-                    EXEC @nRet = pbx_Bill_ModifyDbf @aVchType, @OldVchCode, @GOODS_ID, @aPTypeID, '', @aETypeID, @aKTypeID, @aPeriod, @aQty, @aTotal, @aBlockno, @aProdate, 0, @aUnit, @aUnitRate, @ErrorValue
+                    EXEC @nRet = pbx_Bill_ModifyDbf @aVchType, @OldVchCode, @GOODS_ID, @aPTypeID, '', @aETypeID, @aKTypeID, @aPeriod, @aQty, @aTotal, @aBlockno, @aProdate, 0, @aUnit, @aUnitRate, @ErrorValue OUT
                     IF @nRet < 0 
                         GOTO ErrorRollback
                         
@@ -267,18 +267,16 @@ AS
     RETURN @nRet
     
     ErrorGeneral:    --检查数据是错误，不需要回滚
-    --DELETE  FROM tbx_Bill_Order_D
-    --WHERE   Vchcode = @NewVchCode
-    --DELETE  FROM tbx_Bill_Order_M
-    --WHERE   Vchcode = @NewVchCode	 
+
+    EXEC dbo.pbx_Bill_ClearSaveCreate 0, 0, @aVchType, @NewVchCode, @OldVchCode
+
     RETURN -1   
     
     ErrorRollback:   --数据操作是错误，需要回滚
     ROLLBACK TRAN Account 
-    --DELETE  FROM tbx_Bill_Order_D
-    --WHERE   Vchcode = @NewVchCode
-    --DELETE  FROM tbx_Bill_Order_M
-    --WHERE   Vchcode = @NewVchCode
+
+    EXEC dbo.pbx_Bill_ClearSaveCreate 0, 0, @aVchType, @NewVchCode, @OldVchCode
+
     RETURN -2 
 
 GO 

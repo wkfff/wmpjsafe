@@ -1,67 +1,9 @@
-inherited frmMDI: TfrmMDI
-  BorderStyle = bsNone
-  Caption = 'frmMDI'
-  FormStyle = fsMDIChild
-  OnClose = FormClose
+inherited frmStockGoodsIni: TfrmStockGoodsIni
+  Caption = 'frmStockGoodsIni'
   PixelsPerInch = 96
   TextHeight = 13
-  object splOP: TSplitter [0]
-    Left = 0
-    Top = 82
-    Height = 236
-  end
-  object pnlTop: TPanel [1]
-    Left = 0
-    Top = 44
-    Width = 736
-    Height = 38
-    Align = alTop
-    Caption = 'pnlTop'
-    TabOrder = 0
-  end
-  object gridMainShow: TcxGrid [2]
-    Left = 3
-    Top = 82
-    Width = 733
-    Height = 236
-    Align = alClient
-    TabOrder = 1
-    object gridTVMainShow: TcxGridTableView
-      NavigatorButtons.ConfirmDelete = False
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-    end
-    object gridLVMainShow: TcxGridLevel
-      GridView = gridTVMainShow
-    end
-  end
-  object dsMainShow: TDataSource [3]
-    DataSet = cdsMainShow
-    Left = 660
-    Top = 16
-  end
-  object cdsMainShow: TClientDataSet [4]
-    Aggregates = <>
-    Params = <>
-    Left = 596
-    Top = 16
-  end
-  inherited actlstEvent: TActionList
-    Left = 564
-    Top = 16
-    object actClose: TAction
-      Caption = #20851#38381
-      OnExecute = actCloseExecute
-    end
-    object actReturn: TAction
-      Caption = #36820#22238
-      OnExecute = actReturnExecute
-    end
-  end
-  object imglstBtn: TcxImageList
+  inherited imglstBtn: TcxImageList
     FormatVersion = 1
-    DesignInfo = 1049204
     ImageInfo = <
       item
         Image.Data = {
@@ -136,57 +78,75 @@ inherited frmMDI: TfrmMDI
           0000010000010100000100000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000451C0045B64C
+          03B6D65E0BD6DC5F09DCDC5A01DCDC5E04DCDC6107DCDC6103DCDC6002DCDC61
+          07DCDC5F05DCDC5901DCDC5E08DCD65E0BD6B64D05B6451C0045BA4C00BAFF68
+          01FFFF6D08FFFF8129FFFF964BFFFF9C4FFFFFA253FFFFA04DFFFF9F4DFFFFA1
+          52FFFF9D51FFFF964BFFFF7F26FFFF6E0AFFFF6902FFBA4C00BAD75903D7FF6A
+          04FFFF6E07FFFFC395FFFFCF9FFFFFD6AAFFFFD198FFFFDAACFFFFD096FFFFDB
+          AFFFFFCC94FFFFD0A1FFFFC395FFFF6F08FFFF6A04FFD75903D7DC600ADCFF71
+          0DFFFF780AFFFFCB9AFFFFAB4CFFFFB75EFFFFAD3CFFFFBE62FFFFB03DFFFFBC
+          60FFFF9C20FFFFA339FFFFCA98FFFF7709FFFF710CFFDB600BDBDC5E06DCFF74
+          0AFFFF7D05FFFFD19FFFFFC97DFFFFD28CFFFFCC6FFFFFD98EFFFFCF70FFFFD2
+          80FFFFA51BFFFFAB38FFFFCC96FFFF7D04FFFF7309FFDC5F09DCDC5E04DCFF77
+          06FFFF8608FFFFD29BFFFFBB4EFFFFC65FFFFFC440FFFFD062FFFFC63DFFFFCF
+          66FFFFB837FFFFBB4FFFFFD29BFFFF8608FFFF7706FFDC5F05DCDC6107DCFF7B
+          05FFFF8E0FFFFFD7A3FFFFCF75FFFFDA89FFFFDC72FFFFE58DFFFFDD6AFFFFE4
+          92FFFFD068FFFFCF76FFFFD7A3FFFF8E10FFFF7B06FFDC6104DCDC6002DCFF7A
+          00FFFF8F0BFFFFD79EFFFFC24CFFFFCF61FFFFD649FFFFE165FFFFDA3DFFFFDE
+          6DFFFFC53CFFFFC34DFFFFD69EFFFF900DFFFF7B01FFDC5F00DCDC6104DCFF7D
+          05FFFF8E09FFFFD7A1FFFFD074FFFFDA85FFFFDD6BFFFFE889FFFFE267FFFFE5
+          8DFFFFD062FFFFD075FFFFD7A1FFFF8E0AFFFF7D05FFDC6104DCDC640ADCFF7F
+          0DFFFF8B0AFFFFD49BFFFFC65CFFFFD16DFFFFD24CFFFFDE6FFFFFD74EFFFFDC
+          73FFFFC647FFFFC75CFFFFD49CFFFF8A08FFFF7F0CFFDC640BDCDC5E05DCFF79
+          0AFFFF8404FFFFD6A6FFFFE7C0FFFFDEA3FFFFE09EFFFFE3A5FFFFE2A0FFFFE1
+          A4FFFFDB9CFFFFE7C0FFFFD6A7FFFF8303FFFF7808FFDC6008DCDC5D05DCFF72
+          06FFFF8009FFFFCF9BFFFFAF43FFFF9F09FFFFA70CFFFFAB0CFFFFAB0CFFFFA7
+          0BFFFF9F09FFFFAF43FFFFCF9BFFFF8009FFFF7206FFDC5D05DCDC5D06DCFF6B
+          04FFFF7A10FFFFCC9CFFFFA135FFFF9003FFFF990AFFFF9A05FFFF9903FFFF99
+          0AFFFF9105FFFFA135FFFFCB9CFFFF7B10FFFF6D05FFDB5B03DBD75901D7FF68
+          00FFFF6F08FFFFC59AFFFFD4A9FFFFC380FFFFC885FFFFC781FFFFC680FFFFC7
+          85FFFFC382FFFFD4AAFFFFC599FFFF700AFFFF6801FFD75800D7BA4F04BAFF6C
+          07FFFF6C06FFFF7F26FFFF9A52FFFF9E52FFFFA050FFFFA253FFFFA353FFFFA0
+          51FFFF9E52FFFF9A52FFFF7F27FFFF6B06FFFF6C07FFBA4F04BA461F0446B650
+          0AB6D65B06D6DC5C03DCDC5E07DCDC5E05DCDC5D01DCDC6206DCDC6307DCDC5E
+          02DCDC5D03DCDC5F07DCDC5D06DCD65A04D6B65009B6451E0445}
       end>
   end
-  object bmList: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = #24494#36719#38597#40657
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
+  inherited bmList: TdxBarManager
     Categories.ItemsVisibles = (
       2)
     Categories.Visibles = (
       True)
-    ImageOptions.LargeImages = imglstBtn
-    PopupMenuLinks = <>
-    UseSystemFont = True
-    Left = 216
-    Top = 16
     DockControlHeights = (
       0
       0
       44
       0)
-    object barTool: TdxBar
-      AllowQuickCustomizing = False
-      Caption = 'ToolBtn'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 259
-      FloatTop = 271
-      FloatClientWidth = 0
-      FloatClientHeight = 0
+    inherited barTool: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+        end
+        item
+          Visible = True
+          ItemName = 'btnModifyIni'
+        end
         item
           Visible = True
           ItemName = 'btnClose'
         end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
     end
-    object btnClose: TdxBarLargeButton
-      Action = actClose
+    object btnModifyIni: TdxBarLargeButton
+      Caption = #20462#25913#26399#21021
       Category = 0
-      LargeImageIndex = 1
+      Hint = #20462#25913#26399#21021
+      Visible = ivAlways
+      LargeImageIndex = 2
       AutoGrayScale = False
     end
   end
