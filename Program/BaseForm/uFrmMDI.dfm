@@ -16,7 +16,6 @@ inherited frmMDI: TfrmMDI
     Width = 736
     Height = 38
     Align = alTop
-    Caption = 'pnlTop'
     TabOrder = 0
   end
   object gridMainShow: TcxGrid [2]

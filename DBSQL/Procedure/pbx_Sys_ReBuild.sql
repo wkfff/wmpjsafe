@@ -8,8 +8,8 @@ go
 --  ********************************************************************************************
 CREATE PROCEDURE pbx_Sys_ReBuild
     (
-      @BeginPeriod INT ,--清除库存商品
-      @BakDly INT ,--清除草稿库
+      @ClearStock INT ,--清除库存商品和会计科目的期初值
+      @ClearBak INT ,--清除草稿库
       --下面面是必须的参数
       @ErrorValue VARCHAR(500) OUTPUT  
     )
@@ -25,6 +25,15 @@ AS
     TRUNCATE TABLE dbo.tbx_Bill_Buy_D
     TRUNCATE TABLE dbo.tbx_Bill_Sale_D
     TRUNCATE TABLE dbo.tbx_Bill_NumberRecords
+    
+    IF @ClearStock = 1
+    BEGIN
+		TRUNCATE TABLE dbo.tbx_Stock_Goods
+		TRUNCATE TABLE dbo.tbx_Stock_Goods_Ini
+		TRUNCATE TABLE dbo.tbx_Stock_Glide	
+    END
+    
+    
       
     COMMIT TRAN DelBill
     

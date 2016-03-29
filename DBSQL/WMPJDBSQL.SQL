@@ -297,8 +297,7 @@ IF OBJECT_ID('dbo.tbx_Sys_TbxCfg') IS NULL
           [TbxRowIndex] INT NOT NULL DEFAULT 0 ,--排列顺序
           [TbxComment] VARCHAR(200) NOT NULL DEFAULT '' , 
           CONSTRAINT PK_tbx_Sys_TbxCfg PRIMARY KEY ( TbxId )
-        )
-        
+        )  
 GO
 
 --系统-数量，单价，金额，折扣，税率，关系和比率(%)的小数位数配置
@@ -312,6 +311,20 @@ IF OBJECT_ID('dbo.tbx_Sys_DitDef') IS NULL
 		) ON [PRIMARY]
 	GO
 
+--系统-相关的配置参数
+IF OBJECT_ID('dbo.tbx_Sys_Param') IS NULL 
+    CREATE TABLE [dbo].[tbx_Sys_Param]
+        (
+          [PKey] VARCHAR(50) NOT NULL DEFAULT NEWID() ,
+          [PName] VARCHAR(50) NOT NULL DEFAULT '' ,--名称
+          [PValue] VARCHAR(1024) NOT NULL DEFAULT '' ,--参数值
+          [RowIndex] INT NOT NULL DEFAULT 0 ,--排列顺序
+          [PComment] VARCHAR(512) NOT NULL DEFAULT '' ,--备注
+          CONSTRAINT PK_tbx_Sys_Param PRIMARY KEY ( PKey )
+        )
+	 INSERT dbo.tbx_Sys_Param ( PKey, PName, PValue, PComment )
+	 VALUES ( '6803F1DE-3B23-481E-92FE-A4F4107E55F7', 'InitOver', '0', '开账标志,1开账,0未开账' ) 
+GO
 
 --单据-进货或者销售订单主表
 IF OBJECT_ID('dbo.tbx_Bill_Order_M') IS NULL 
