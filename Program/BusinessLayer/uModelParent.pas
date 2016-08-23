@@ -502,7 +502,7 @@ var
   aShowMsg: string;
 begin
   aRet := -1;
-  aShowMsg := '未定义操作类型';
+  aShowMsg := '未定义操作类型！';
   aList := TParamObject.Create;
   try
     aList.Add('@errorValue', '');
@@ -513,13 +513,13 @@ begin
     aRet := gMFCom.ExecProcByName(GetBillDraftProcName, aList);
     if aRet = 0 then
     begin
-      aShowMsg := '保存草稿成功';
+      aShowMsg := '保存草稿成功！';
       if ADraft =  soSettle then
       begin
         aList.Add('@NewVchCode', AVchcode);
         aList.Add('@OldVchCode', AOldVchcode);
         aRet := gMFCom.ExecProcByName(GetBillCreateProcName, aList);
-        aShowMsg := '过账成功';
+        aShowMsg := '过账成功！';
       end;
     end;
 
@@ -531,7 +531,7 @@ begin
     else
     begin
       if AVchType in OrderVchtypes then
-        aShowMsg := '保存订单成功';
+        aShowMsg := '保存订单成功！';
         
       gMFCom.ShowMsgBox(aShowMsg, '提示', mbtInformation);
     end;
@@ -594,8 +594,8 @@ begin
   aCdsMaster := TClientDataSet.Create(nil);
   try
     aList.Add('@VchCode', AInParam.AsInteger('VchCode'));
-    aList.Add('@DBName', AInParam.AsString('DBName'));
-    aList.Add('@UsedType', AInParam.AsString('UsedType'));
+    aList.Add('@VchType', AInParam.AsInteger('VchType'));
+    aList.Add('@BillState', AInParam.AsInteger('BillState'));
     gMFCom.ExecProcBackData('pbx_Bill_Load_D', aList, ACdsD);
   finally
     aCdsMaster.Free;

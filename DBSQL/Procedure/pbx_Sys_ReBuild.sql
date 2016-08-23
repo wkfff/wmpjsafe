@@ -24,6 +24,7 @@ AS
     TRUNCATE TABLE dbo.tbx_Bill_D_Bak
     TRUNCATE TABLE dbo.tbx_Bill_Buy_D
     TRUNCATE TABLE dbo.tbx_Bill_Sale_D
+    TRUNCATE TABLE dbo.tbx_Bill_Other_D
     TRUNCATE TABLE dbo.tbx_Bill_NumberRecords
     
     IF @ClearStock = 1
@@ -33,7 +34,7 @@ AS
 		TRUNCATE TABLE dbo.tbx_Stock_Glide	
     END
     
-    
+    UPDATE dbo.tbx_Sys_Param SET PValue = '0' WHERE PName = 'InitOver'
       
     COMMIT TRAN DelBill
     

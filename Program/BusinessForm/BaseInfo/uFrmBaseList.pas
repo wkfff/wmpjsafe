@@ -97,8 +97,8 @@ procedure TfrmBaseList.IniGridField;
 begin
   inherited;
   FGridItem.ClearField();
-  FGridItem.AddFiled(FBasicType);
-  FGridItem.AddFiled('RowIndex', '–Ú∫≈', 50, cfInt);
+  FGridItem.AddField(FBasicType);
+  FGridItem.AddField('RowIndex', '–Ú∫≈', 50, cfInt);
   FGridItem.AddCheckBoxCol('IsStop', ' «∑ÒÕ£”√', 1, 0);
   FGridItem.InitGridData;
 end;

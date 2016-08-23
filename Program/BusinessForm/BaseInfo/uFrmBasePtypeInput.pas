@@ -138,14 +138,14 @@ var
   aColInfo: TColInfo;
 begin
   FGridItem.ClearField();
-  FGridItem.AddFiled('IsBase', 'IsBase', -1, cfInt);
-  FGridItem.AddFiled('UnitId', 'UnitId', -1, cfInt);
-  aColInfo := FGridItem.AddFiled('UnitType', '项目', 100, cfString);
+  FGridItem.AddField('IsBase', 'IsBase', -1, cfInt);
+  FGridItem.AddField('UnitId', 'UnitId', -1, cfInt);
+  aColInfo := FGridItem.AddField('UnitType', '项目', 100, cfString);
   aColInfo.GridColumn.Options.Editing := False;
-  FGridItem.AddFiled('UnitName', '单位名称', 100, cfString);
-  FGridItem.AddFiled('UnitRates', '单位关系', 100, cfQty);
-  FGridItem.AddFiled('Barcode', '条码', 100, cfString);
-  FGridItem.AddFiled('RetailPrice', '零售价', 100, cfPrice);
+  FGridItem.AddField('UnitName', '单位名称', 100, cfString);
+  FGridItem.AddField('UnitRates', '单位关系', 100, cfQty);
+  FGridItem.AddField('Barcode', '条码', 100, cfString);
+  FGridItem.AddField('RetailPrice', '零售价', 100, cfPrice);
   FGridItem.InitGridData;
 
   gridTVPtypeUnit.DataController.RecordCount := 3;
@@ -232,7 +232,7 @@ begin
   inherited;
   if FGridItem.RowIndex = 0 then
   begin
-    if FGridItem.FindColByFieldName('UnitRates') = AItem then
+    if FGridItem.FindColByFieldName('UnitRates').GridColumn = AItem then
       AAllow := False;
   end
   else if FGridItem.RowIndex = 1 then

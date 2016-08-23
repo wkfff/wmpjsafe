@@ -6,8 +6,9 @@ inherited frmStockGoodsIni: TfrmStockGoodsIni
     object lblKType: TLabel
       Left = 11
       Top = 12
-      Width = 84
+      Width = 190
       Height = 13
+      AutoSize = False
       Caption = #20179#24211#65306#20840#37096#20179#24211
     end
   end

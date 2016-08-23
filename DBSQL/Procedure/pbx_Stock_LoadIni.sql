@@ -1,10 +1,10 @@
-IF OBJECT_ID('dbo.pbx_Sys_LoadStockGoodsIni') IS NOT NULL 
-    DROP PROCEDURE dbo.pbx_Sys_LoadStockGoodsIni
+IF OBJECT_ID('dbo.pbx_Stock_LoadIni') IS NOT NULL 
+    DROP PROCEDURE dbo.pbx_Stock_LoadIni
 go
 
 --查询期初库存商品信息
 
-CREATE PROCEDURE pbx_Sys_LoadStockGoodsIni
+CREATE PROCEDURE pbx_Stock_LoadIni
     (
       @ParPTypeId VARCHAR(50) ,
       @KTypeId VARCHAR(50) ,

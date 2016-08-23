@@ -29,16 +29,20 @@ type
     btnSave: TdxBarLargeButton;
     actSaveDraft: TAction;
     actSaveSettle: TAction;
+    actSelectBill: TAction;
+    btnSelectBill: TdxBarLargeButton;
     procedure actSaveDraftExecute(Sender: TObject);
     procedure actSaveSettleExecute(Sender: TObject);
   private
     { Private declarations }
     FBillSaveState: TBillSaveState; //单据保存类型状态
     FBillOpenState: TBillOpenState; //单据是以什么状态打开
+    FBillCurrState: TBillCurrState; //当前单据变成了什么状态
     
   protected
     FVchCode, FVchType: Integer;//单据ID，单据类型
     FModelBill: IModelBill;
+    FReadOnlyFlag: boolean;//是否能够修改单据
     
     procedure BeforeFormShow; override;
     procedure BeforeFormDestroy; override;
@@ -49,6 +53,7 @@ type
     function LoadBillData: Boolean; virtual;//加载单据
     function LoadBillDataMaster: Boolean; virtual;//加载表头数据
     function LoadBillDataGrid: Boolean; virtual;//加载表格数据
+    function GetLoadDSign: string; virtual; abstract;//得到获取单据明细的标志
 
     procedure InitMasterTitles(Sender: TObject); virtual; //初始化表头
     procedure InitGrids(Sender: TObject); virtual; //初始化表体
@@ -56,6 +61,7 @@ type
     procedure InitOthers(Sender: TObject); virtual; ////初始化其它
 
     function BeforeSaveBill(ASaveState: TBillSaveState): Boolean; virtual;
+    procedure SetReadOnly(AReadOnly: Boolean = True); virtual;//设置单据是否只读
 
     function CheckSaveBillData(ASaveState: TBillSaveState): Boolean; virtual;//保存前检查数据
     
@@ -71,10 +77,12 @@ type
     function LoadOnePtype(ARow: Integer; AData: TSelectBasicData; IsImport: Boolean = False): Boolean; virtual;//加载一条记录
 
     procedure GetBillNumber;
+    procedure SetQtyPriceTotal(ATotal, AQty, APrice: string);//设置数量单价金额的公式
   public
     { Public declarations }
      property BillSaveState: TBillSaveState read FBillSaveState write FBillSaveState;
-     property BillOpenState: TBillOpenState read FBillOpenState write FBillOpenState; 
+     property BillOpenState: TBillOpenState read FBillOpenState write FBillOpenState;
+     property BillCurrState: TBillCurrState read FBillCurrState write FBillCurrState;   
 
   end;
 
@@ -84,7 +92,7 @@ var
 implementation
 
 uses uSysSvc, uBaseFormPlugin, uMoudleNoDef, uParamObject, uModelControlIntf,
-     uBaseInfoDef, uGridConfig, uFrmApp, uVchTypeDef;
+     uBaseInfoDef, uGridConfig, uFrmApp, uVchTypeDef, uOtherIntf;
 
 {$R *.dfm}
 
@@ -138,7 +146,7 @@ begin
   try
     aList.Add('@DoWork', 1);
     aList.Add('@VchType', FVchType);
-    aList.Add('@OldVchCode', 0);
+    aList.Add('@OldVchCode', FVchcode);
     aList.Add('@NewVchCode', 0);
     aList.Add('@BillDate', '');
     aList.Add('@VchNumberIn', edtBillNumber.Text);
@@ -178,6 +186,10 @@ begin
 end;
 
 function TfrmMDIBill.LoadBillDataGrid: Boolean;
+var
+  aInList: TParamObject;
+  aCdsD: TClientDataSet;
+  aBillState: Integer;
 begin
   if FVchcode = 0 then //新单据
   begin
@@ -186,23 +198,49 @@ begin
   else
   begin
     //加载单据
-//    if (nDraft = 1) or (nDraft > 3) then szTemp := GetDlyName(bosEdit, FVchType)
-//    else szTemp := GetDlyName(BillOpenState, FVchType);
-//    GridDataSet.Close;
-//    LoadDly(szTemp, FVchCode, GridDataSet);
-//    SetGridProperty(MainGrid);
-//    LoadLoadBillDataUnitData;
-//    ReadpgDetailData(MainGrid);
-//    ReadSnDetailData(MainGrid);
+    aInList := TParamObject.Create;
+    aCdsD := TClientDataSet.Create(nil);
+    try
+      aInList.Add('VchCode', FVchCode);
+      aInList.Add('VchType', FVchType);
+      aBillState := Ord(BillOpenState);
+      aInList.Add('BillState', Ord(BillOpenState));
+      FModelBill.LoadBillDataDetail(aInList, aCdsD);
+      FGridItem.LoadData(aCdsD);
+    finally
+      aCdsD.Free;
+      aInList.Free;
+    end;
   end;
 end;
 
 function TfrmMDIBill.LoadBillDataMaster: Boolean;
+var
+  aInList, aMasterList: TParamObject;
 begin
   DBComItem.ClearItemData();
   if FVchCode = 0 then
   begin
     GetBillNumber();
+  end
+  else
+  begin
+    aInList := TParamObject.Create;
+    aMasterList := TParamObject.Create;
+    try
+      aInList.Add('VchCode', FVchCode);
+      aInList.Add('VchType', FVchType);
+      FModelBill.LoadBillDataMaster(aInList, aMasterList);
+      if aMasterList.Count = 0 then
+      begin
+        (SysService as IMsgBox).MsgBox('该单据不存在，可能已经被删除！');
+        FrmClose();  
+      end;
+      DBComItem.GetDataFormParam(aMasterList);
+    finally
+      aMasterList.Free;
+      aInList.Free;
+    end;
   end;
 end;
 
@@ -326,8 +364,44 @@ end;
 
 function TfrmMDIBill.LoadBillData: Boolean;
 begin
+  //加载单据
+  if BillOpenState = bosNew then
+  begin
+    BillCurrState := bcsEdit;
+    FReadOnlyFlag := False;
+  end
+  else if BillOpenState = bosEdit then
+  begin
+    BillCurrState := bcsEdit;
+    FReadOnlyFlag := False;
+  end
+  else if (BillOpenState in [bosEdit, bosSett, bosModi]) then
+  begin
+    if BillOpenState <>  bosSett then
+    begin
+      BillCurrState := bcsEdit;
+      FReadOnlyFlag := False;
+    end
+    else
+    begin
+      BillCurrState := bcsView;
+      FReadOnlyFlag := True;
+    end;
+  end
+  else if BillOpenState = bosView then 
+  begin
+    BillCurrState := bcsView; //查看凭证
+    FReadOnlyFlag := True;
+    actSaveDraft.Enabled := False;
+    actSaveSettle.Enabled := False;
+    actSelectBill.Enabled := False;
+  end
+  else Exit; //错误参数
+  
   LoadBillDataMaster();
   LoadBillDataGrid();
+
+  SetReadOnly(FReadOnlyFlag);
 end;
 
 procedure TfrmMDIBill.GetBillNumber;
@@ -358,6 +432,26 @@ function TfrmMDIBill.CheckSaveBillData(
   ASaveState: TBillSaveState): Boolean;
 begin
   Result := True;
+end;
+
+procedure TfrmMDIBill.SetQtyPriceTotal(ATotal, AQty, APrice: string);
+var
+  aColInfo: TColInfo;
+begin
+  aColInfo := FGridItem.FindColByFieldName(ATotal);
+  aColInfo.AddExpression(AQty + '=[' + ATotal + ']/[' + APrice + ']');
+
+  aColInfo := FGridItem.FindColByFieldName(AQty);
+  aColInfo.AddExpression(ATotal + '=[' + AQty + ']*[' + APrice + ']');
+
+  aColInfo := FGridItem.FindColByFieldName(APrice);
+  aColInfo.AddExpression(ATotal + '=[' + AQty + ']*[' + APrice + ']');
+end;
+
+procedure TfrmMDIBill.SetReadOnly(AReadOnly: Boolean);
+begin
+  DBComItem.SetReadOnly(nil, AReadOnly);
+  FGridItem.SetGridCellSelect(not AReadOnly);
 end;
 
 end.

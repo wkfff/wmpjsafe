@@ -1,10 +1,10 @@
-IF OBJECT_ID('dbo.pbx_Sys_ModifyStockGoodsIni') IS NOT NULL 
-    DROP PROCEDURE dbo.pbx_Sys_ModifyStockGoodsIni
+IF OBJECT_ID('dbo.pbx_Stock_ModifyIni') IS NOT NULL 
+    DROP PROCEDURE dbo.pbx_Stock_ModifyIni
 go
 
 -- 期初商品库存修改
 
-CREATE PROCEDURE pbx_Sys_ModifyStockGoodsIni
+CREATE PROCEDURE pbx_Stock_ModifyIni
     (
       @PTypeId VARCHAR(25) ,
       @KTypeId VARCHAR(25) ,
@@ -17,6 +17,18 @@ CREATE PROCEDURE pbx_Sys_ModifyStockGoodsIni
     )
 AS 
     DECLARE @Return INT
+    DECLARE @InitOver INT
+    
+    SELECT  @InitOver = PValue
+    FROM    dbo.tbx_Sys_Param
+    WHERE   PName = 'InitOver'
+    
+    IF ISNULL(@InitOver, 0) = 1
+    BEGIN
+		SET @ErrorValue='已经开账，不能修改期初数据！'
+		GOTO ErrorGeneral 	
+    END
+    
     IF NOT EXISTS ( SELECT  1
                     FROM    dbo.tbx_Base_Ptype
                     WHERE   PTypeId = @PTypeId

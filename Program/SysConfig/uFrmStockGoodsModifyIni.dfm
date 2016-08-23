@@ -32,17 +32,26 @@ inherited frmStockGoodsModifyIni: TfrmStockGoodsModifyIni
     object lbl1: TcxLabel
       Left = 84
       Top = 24
+      AutoSize = False
       Caption = #25968#37327
+      Height = 17
+      Width = 32
     end
     object lbl3: TcxLabel
       Left = 84
       Top = 51
+      AutoSize = False
       Caption = #21333#20215
+      Height = 17
+      Width = 32
     end
     object lbl2: TcxLabel
       Left = 84
       Top = 78
+      AutoSize = False
       Caption = #37329#39069
+      Height = 17
+      Width = 32
     end
     object edtQty: TcxButtonEdit
       Left = 120

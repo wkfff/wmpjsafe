@@ -56,6 +56,7 @@ type
 
     procedure IniView; override;
     procedure QryData;
+    procedure DoLoadUpDownData(Sender: TObject; ATypeid: string); virtual; ///双击表格时回调的函数
   public
     { Public declarations }
   end;
@@ -105,6 +106,7 @@ begin
   inherited;
   FGridItem := TGridItem.Create(MoudleNo, gridMainShow, gridTVMainShow);
   FGridItem.SetGoToNextCellOnEnter(False);
+  FGridItem.OnLoadUpDownData := DoLoadUpDownData;
   FDBAC := SysService as IDBAccess;
   FModelFun := SysService as IModelFun;
 
@@ -131,24 +133,24 @@ begin
 
   if FBasicType = btPtype then
   begin
-    FGridItem.AddFiled(btPtype);
+    FGridItem.AddField(btPtype);
     FGridItem.AddCheckBoxCol('IsStop', '是否停用', 1, 0);
   end
   else if FBasicType = btDtype then
   begin
-    FGridItem.AddFiled(btDtype);
+    FGridItem.AddField(btDtype);
   end
   else if FBasicType = btEtype then
   begin
-    FGridItem.AddFiled(btEtype);
+    FGridItem.AddField(btEtype);
   end
   else if FBasicType = btBtype then
   begin
-    FGridItem.AddFiled(btBtype);
+    FGridItem.AddField(btBtype);
   end
   else if FBasicType = btKtype then
   begin
-    FGridItem.AddFiled(btKtype);
+    FGridItem.AddField(btKtype);
   end;
   FGridItem.InitGridData;
 end;
@@ -280,19 +282,19 @@ begin
     case cbbQueryType.ItemIndex of
       0:
         begin
-          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeFullName(FBasicType));
+          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeFullName(FBasicType)).GridColumn;
           gridTVMainShow.DataController.Filter.Root.AddItem(aFilterCol, foLike, aFilterStr, aFilterStr);
-          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeUsercode(FBasicType));
+          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeUsercode(FBasicType)).GridColumn;
           gridTVMainShow.DataController.Filter.Root.AddItem(aFilterCol, foLike, aFilterStr, aFilterStr);
         end;
       1:
         begin
-          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeFullName(FBasicType));
+          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeFullName(FBasicType)).GridColumn;
           gridTVMainShow.DataController.Filter.Root.AddItem(aFilterCol, foLike, aFilterStr, aFilterStr);
         end;
       2:
         begin
-          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeUsercode(FBasicType));
+          aFilterCol := FGridItem.FindColByFieldName(GetBaseTypeUsercode(FBasicType)).GridColumn;
           gridTVMainShow.DataController.Filter.Root.AddItem(aFilterCol, foLike, aFilterStr, aFilterStr);
         end;
     else
@@ -306,6 +308,12 @@ procedure TfrmBaseSelect.actOKExecute(Sender: TObject);
 begin
   inherited;
   actSelectExecute(actSelect);
+end;
+
+procedure TfrmBaseSelect.DoLoadUpDownData(Sender: TObject;
+  ATypeid: string);
+begin
+  LoadGridData(ATypeid);
 end;
 
 end.

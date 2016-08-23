@@ -16,14 +16,14 @@ type
   //参数数组
   TGParams = array of TGParam;
 
-  TParamObject = class(TPersistent)
+  TParamObject = class(TObject)
   private
     FParams: TGParams;
     FCount: Integer;
     procedure SetParams(Value: TGParams);
   public
     constructor Create;
-    procedure Assign(Source: TPersistent); override;
+    procedure Assign(Source: TObject);
     procedure SetValue(AParamName: string; AParamValue: Variant; AddWhenNotExist: Boolean = True);
     procedure Add(AParamName: string; AParamValue: Variant; IsSystem: Boolean = False); //先查找，有就修改没有就增加。
     procedure Clear; //只清空非系统级的
@@ -173,13 +173,11 @@ begin
     Result := V;
 end;
 
-procedure TParamObject.Assign(Source: TPersistent);
+procedure TParamObject.Assign(Source: TObject);
 var
   i: Integer;
   aTGParam: TGParam;
 begin
-  inherited;
-
   if not (Source is TParamObject) then Exit;
 
   Self.Clear;

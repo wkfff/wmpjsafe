@@ -36,7 +36,6 @@ type
     procedure InitGrids(Sender: TObject); override;
 
     function LoadBillDataMaster: Boolean; override;
-    function LoadBillDataGrid: Boolean; override;
     function LoadPtype(ABasicDatas: TSelectBasicDatas): Boolean;
     function LoadOnePtype(ARow: Integer; AData: TSelectBasicData; IsImport: Boolean = False): Boolean; override;
 
@@ -108,19 +107,16 @@ begin
 end;
 
 procedure TfrmBillOrder.InitGrids(Sender: TObject);
-var
-  aColInfo: TColInfo;
 begin
   inherited;
   FGridItem.ClearField();
-  FGridItem.AddFiled(btPtype);
-  FGridItem.AddFiled('Unit', '单位');
-  FGridItem.AddFiled('Qty', '数量', 100, cfQty);
-  FGridItem.AddFiled('Price', '单价', 100, cfPrice);
+  FGridItem.AddField(btPtype);
+  FGridItem.AddField('Qty', '数量', 100, cfQty);
+  FGridItem.AddField('Price', '单价', 100, cfPrice);
+  FGridItem.AddField('Total', '金额', 100, cfTotal);
+  FGridItem.AddField('Comment', '备注');
 
-  aColInfo := FGridItem.AddFiled('Total', '金额', 100, cfTotal);
-  aColInfo.AddExpression('[Qty]*[Price]');
-  FGridItem.AddFiled('Comment', '备注');   
+  SetQtyPriceTotal('Total', 'Qty', 'Price');
   FGridItem.InitGridData;
 end;
 
@@ -131,6 +127,8 @@ begin
   actSaveSettle.Caption := '保存';
   btnSave.Action := actSaveSettle;
   btnSave.ButtonStyle := bsDefault;
+  btnSave.ImageIndex := 3;
+  btnSave.LargeImageIndex := 3;
   
   case FVchType of
     VchType_Order_Buy:
@@ -161,61 +159,13 @@ begin
   deGatheringDate.Text := FormatdateTime('YYYY-MM-DD', Now + 1);
 end;
 
-function TfrmBillOrder.LoadBillDataGrid: Boolean;
-var
-  aInList: TParamObject;
-  aCdsD: TClientDataSet;
-begin
-  if FVchcode = 0 then //新单据
-  begin
-    FGridItem.ClearData;
-  end
-  else
-  begin
-    //加载单据
-    aInList := TParamObject.Create;
-    aCdsD := TClientDataSet.Create(nil);
-    try
-      aInList.Add('VchCode', FVchCode);
-      aInList.Add('DBName', 'tbx_Bill_Order_D');
-      aInList.Add('UsedType', '1');
-      FModelBill.LoadBillDataDetail(aInList, aCdsD);
-      FGridItem.LoadData(aCdsD);
-    finally
-      aCdsD.Free;
-      aInList.Free;
-    end;
-  end;
-end;
-
 function TfrmBillOrder.LoadBillDataMaster: Boolean;
-var
-  aInList, aMasterList: TParamObject;
 begin
   inherited LoadBillDataMaster;
   if FVchCode = 0 then
   begin
     deGatheringDate.Text := FormatdateTime('YYYY-MM-DD', Now + 1);
   end
-  else
-  begin
-    aInList := TParamObject.Create;
-    aMasterList := TParamObject.Create;
-    try
-      aInList.Add('VchCode', FVchCode);
-      aInList.Add('VchType', FVchType);
-      FModelBill.LoadBillDataMaster(aInList, aMasterList);
-      if aMasterList.Count = 0 then
-      begin
-        (SysService as IMsgBox).MsgBox('该单据不存在，可能已经被删除！');
-        FrmClose();  
-      end;
-      DBComItem.GetDataFormParam(aMasterList);
-    finally
-      aMasterList.Free;
-      aInList.Free;
-    end;
-  end;
 end;
 
 function TfrmBillOrder.LoadOnePtype(ARow: Integer; AData: TSelectBasicData;
@@ -260,12 +210,17 @@ function TfrmBillOrder.SaveDetailData(
 var
   aPackData: TParamObject;
   aRow: Integer;
+  aPrice, aTotal, aQty: Extended;
 begin
   ABillDetailData.ProcName := 'pbx_Bill_Is_Order_D';
   for aRow := FGridItem.GetFirstRow to FGridItem.GetLastRow do
   begin
     if StringEmpty(FGridItem.GetCellValue(GetBaseTypeid(btPtype), aRow)) then Continue;
 
+    aQty := FGridItem.GetCellValue('Qty', aRow);
+    aPrice := FGridItem.GetCellValue('Price', aRow);
+    aTotal := FGridItem.GetCellValue('Total', aRow);
+    
     aPackData := ABillDetailData.AddChild();
     aPackData.Add('@ColRowNo', IntToStr(aRow + 1));
     aPackData.Add('@AtypeId', '0000100001');
@@ -275,37 +230,37 @@ begin
     aPackData.Add('@KtypeId', DBComItem.GetItemValue(edtKtype));
     aPackData.Add('@KtypeId2', '');
     aPackData.Add('@PtypeId', FGridItem.GetCellValue(GetBaseTypeid(btPtype), aRow));
-    aPackData.Add('@CostMode', 1);
+    aPackData.Add('@CostMode', 0);
     aPackData.Add('@UnitRate', 1);
-    aPackData.Add('@Unit', 1);
+    aPackData.Add('@Unit', 0);
     aPackData.Add('@Blockno', '');
     aPackData.Add('@Prodate', '');
     aPackData.Add('@UsefulEndDate', '');
     aPackData.Add('@Jhdate', '');
-    aPackData.Add('@GoodsNo', '1');
-    aPackData.Add('@Qty', FGridItem.GetCellValue('Qty', aRow));
-    aPackData.Add('@Price', FGridItem.GetCellValue('Price', aRow));
-    aPackData.Add('@Total', FGridItem.GetCellValue('Total', aRow));
+    aPackData.Add('@GoodsNo', 0);
+    aPackData.Add('@Qty', aQty);
+    aPackData.Add('@Price', aPrice);
+    aPackData.Add('@Total', aTotal);
     aPackData.Add('@Discount', 1);
-    aPackData.Add('@DiscountPrice', 2);
-    aPackData.Add('@DiscountTotal', 3);
+    aPackData.Add('@DiscountPrice', aPrice);
+    aPackData.Add('@DiscountTotal', aTotal);
     aPackData.Add('@TaxRate', 1);
-    aPackData.Add('@TaxPrice', 1);
-    aPackData.Add('@TaxTotal', 2);
-    aPackData.Add('@AssQty', FGridItem.GetCellValue('Qty', aRow));
-    aPackData.Add('@AssPrice', FGridItem.GetCellValue('Price', aRow));
-    aPackData.Add('@AssDiscountPrice', 2);
-    aPackData.Add('@AssTaxPrice', 1);
-    aPackData.Add('@CostTotal', 2);
-    aPackData.Add('@CostPrice', 3);
-    aPackData.Add('@OrderCode', 4);
-    aPackData.Add('@OrderDlyCode', 1);
-    aPackData.Add('@OrderVchType', 3);
-    aPackData.Add('@Comment', 'ssss');
+    aPackData.Add('@TaxPrice', aPrice);
+    aPackData.Add('@TaxTotal', aTotal);
+    aPackData.Add('@AssQty', aQty);
+    aPackData.Add('@AssPrice', aPrice);
+    aPackData.Add('@AssDiscountPrice', aPrice);
+    aPackData.Add('@AssTaxPrice', aPrice);
+    aPackData.Add('@CostTotal', aTotal);
+    aPackData.Add('@CostPrice', aPrice);
+    aPackData.Add('@OrderCode', 0);
+    aPackData.Add('@OrderDlyCode', 0);
+    aPackData.Add('@OrderVchType', 0);
+    aPackData.Add('@Comment', FGridItem.GetCellValue('Comment', aRow));   
     aPackData.Add('@InputDate', FormatDateTime('YYYY-MM-DD', deBillDate.Date));
     aPackData.Add('@Usedtype', '1');
-    aPackData.Add('@Period', 0);
-    aPackData.Add('@PStatus', 1);
+    aPackData.Add('@Period', 1);
+    aPackData.Add('@PStatus', 0);
     aPackData.Add('@YearPeriod', 1);
   end;
 end;
@@ -326,7 +281,7 @@ begin
   ABillMasterData.Add('@Ktypeid2', '');
   ABillMasterData.Add('@Period', 1);
   ABillMasterData.Add('@YearPeriod', 1);
-  ABillMasterData.Add('@Total', 11);
+  ABillMasterData.Add('@Total', 0);
   ABillMasterData.Add('@RedWord', 'F');
   ABillMasterData.Add('@Defdiscount', 1);
   ABillMasterData.Add('@GatheringDate', DBComItem.GetItemValue(deGatheringDate));
